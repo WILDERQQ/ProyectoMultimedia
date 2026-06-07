@@ -1,0 +1,23 @@
+{
+  "Informatica": [
+    {"codigo": "INF101", "nombre": "Algoritmos y Programación", "creditos": 6, "cupos": 30},
+    {"codigo": "INF201", "nombre": "Estructura de Datos", "creditos": 6, "cupos": 25},
+    {"codigo": "INF301", "nombre": "Base de Datos", "creditos": 5, "cupos": 28},
+    {"codigo": "INF401", "nombre": "Redes de Computadoras", "creditos": 5, "cupos": 20},
+    {"codigo": "INF501", "nombre": "Ingeniería de Software", "creditos": 6, "cupos": 22}
+  ],
+  "Sistemas": [
+    {"codigo": "SIS101", "nombre": "Fundamentos de Sistemas", "creditos": 5, "cupos": 30},
+    {"codigo": "SIS201", "nombre": "Análisis de Sistemas", "creditos": 6, "cupos": 25},
+    {"codigo": "SIS301", "nombre": "Diseño de Sistemas", "creditos": 6, "cupos": 20},
+    {"codigo": "SIS401", "nombre": "Sistemas Distribuidos", "creditos": 5, "cupos": 18},
+    {"codigo": "SIS501", "nombre": "Auditoría de Sistemas", "creditos": 4, "cupos": 22}
+  ],
+  "Electronica": [
+    {"codigo": "ELE101", "nombre": "Circuitos Eléctricos", "creditos": 6, "cupos": 25},
+    {"codigo": "ELE201", "nombre": "Electrónica Analógica", "creditos": 6, "cupos": 20},
+    {"codigo": "ELE301", "nombre": "Electrónica Digital", "creditos": 5, "cupos": 22},
+    {"codigo": "ELE401", "nombre": "Microcontroladores", "creditos": 5, "cupos": 18},
+    {"codigo": "ELE501", "nombre": "Telecomunicaciones", "creditos": 6, "cupos": 15}
+  ]
+}

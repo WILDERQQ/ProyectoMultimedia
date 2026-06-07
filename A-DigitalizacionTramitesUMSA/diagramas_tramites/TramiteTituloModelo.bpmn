@@ -1,0 +1,947 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="umsa_tramites" targetNamespace="http://bpmn.io/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="18.16.0">
+  <collaboration id="Collab_TituloProfesional">
+    <participant id="Pool_Titulo" name="Trámite: Título Profesional (Ex Provisión Nacional)" processRef="Proc_Titulo" />
+  </collaboration>
+  <process id="Proc_Titulo" isExecutable="false">
+    <laneSet id="LaneSet_Titulo">
+      <lane id="Lane_Decanato" name="Decanato / Secretaría de Títulos (Aprobador)">
+        <flowNodeRef>Task_D4_RechazarSolicitud</flowNodeRef>
+        <flowNodeRef>End_Titulo_Aprobado</flowNodeRef>
+        <flowNodeRef>Task_D5_EmitirTitulo</flowNodeRef>
+        <flowNodeRef>Task_D3_AprobarSolicitud</flowNodeRef>
+        <flowNodeRef>Task_D1_RecibirSolicitud</flowNodeRef>
+        <flowNodeRef>Task_D2_VerificarRequisitos</flowNodeRef>
+        <flowNodeRef>End_Titulo_Rechazado</flowNodeRef>
+        <flowNodeRef>GW_D_Requisitos_OK</flowNodeRef>
+      </lane>
+      <lane id="Lane_Banco" name="Entidad Bancaria / Pasarela de Pago">
+        <flowNodeRef>Task_B1_ProcesarPago</flowNodeRef>
+        <flowNodeRef>Task_B2_ConfirmarPago</flowNodeRef>
+      </lane>
+      <lane id="Lane_SistemaUMSA" name="Sistema UMSA (tramitesenlinea.umsa.bo)">
+        <flowNodeRef>Task_S1_ValidarCredenciales</flowNodeRef>
+        <flowNodeRef>Task_S2_MostrarFormulario</flowNodeRef>
+        <flowNodeRef>Task_S3_RecuperarDatos</flowNodeRef>
+        <flowNodeRef>Task_S6_GenerarDocFD</flowNodeRef>
+        <flowNodeRef>Task_S4_GenerarSolicitud</flowNodeRef>
+        <flowNodeRef>Task_S5_ProcessPayment</flowNodeRef>
+      </lane>
+      <lane id="Lane_Estudiante" name="Estudiante (Solicitante / Remitente)">
+        <flowNodeRef>Start_Titulo</flowNodeRef>
+        <flowNodeRef>Task_T1_Acceso</flowNodeRef>
+        <flowNodeRef>Task_T2_Login</flowNodeRef>
+        <flowNodeRef>Task_T3_NavMenu</flowNodeRef>
+        <flowNodeRef>Task_T4_NuevaSolicitud</flowNodeRef>
+        <flowNodeRef>Task_T5_BuscarDatos</flowNodeRef>
+        <flowNodeRef>Task_T6_DatosPersonales</flowNodeRef>
+        <flowNodeRef>Task_T7_DatosAcademicos</flowNodeRef>
+        <flowNodeRef>GW_T_Datos_OK</flowNodeRef>
+        <flowNodeRef>End_Titulo_Estudiante</flowNodeRef>
+        <flowNodeRef>Task_T12_AdjuntarRequisitos</flowNodeRef>
+        <flowNodeRef>Task_T11_ImprimirDocs</flowNodeRef>
+        <flowNodeRef>Task_T9_Confirmacion</flowNodeRef>
+        <flowNodeRef>Task_T8_DatosBachiller</flowNodeRef>
+        <flowNodeRef>GW_T_Pago_OK</flowNodeRef>
+        <flowNodeRef>Task_T10_MetodoPago</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="Start_Titulo" name="Inicio: Solicitud Título Profesional">
+      <outgoing>SF_T01</outgoing>
+    </startEvent>
+    <task id="Task_T1_Acceso" name="1. Acceder a tramitesenlinea.umsa.bo">
+      <incoming>SF_T01</incoming>
+      <outgoing>SF_T02</outgoing>
+    </task>
+    <task id="Task_T2_Login" name="2. Ingresar Usuario y Contraseña → Iniciar Sesión">
+      <incoming>SF_T02</incoming>
+      <outgoing>SF_T03</outgoing>
+    </task>
+    <task id="Task_T3_NavMenu" name="3. Navegar a TÍTULOS Y DIPLOMAS → Título Profesional">
+      <incoming>SF_T04</incoming>
+      <outgoing>SF_T05</outgoing>
+    </task>
+    <task id="Task_T4_NuevaSolicitud" name="4. Hacer clic en + NUEVA SOLICITUD">
+      <incoming>SF_T05</incoming>
+      <outgoing>SF_T06</outgoing>
+    </task>
+    <task id="Task_T5_BuscarDatos" name="5. Ingresar Tipo Doc, CI/Pasaporte y RU → Buscar">
+      <incoming>SF_T07</incoming>
+      <outgoing>SF_T08</outgoing>
+    </task>
+    <task id="Task_T6_DatosPersonales" name="6. Completar Datos Personales (Lugar Nacimiento, Celular, Correo)">
+      <incoming>SF_T08</incoming>
+      <outgoing>SF_T09</outgoing>
+    </task>
+    <task id="Task_T7_DatosAcademicos" name="7. Seleccionar Nivel y Grado Académico">
+      <incoming>SF_T09</incoming>
+      <outgoing>SF_T10</outgoing>
+    </task>
+    <task id="Task_S1_ValidarCredenciales" name="Validar credenciales del usuario">
+      <incoming>SF_T03</incoming>
+      <outgoing>SF_T04</outgoing>
+    </task>
+    <task id="Task_S2_MostrarFormulario" name="Mostrar formulario Búsqueda Datos Solicitantes">
+      <incoming>SF_T06</incoming>
+      <outgoing>SF_T07</outgoing>
+    </task>
+    <task id="Task_S3_RecuperarDatos" name="Recuperar datos académicos del estudiante">
+      <incoming>SF_T08_SYS</incoming>
+      <outgoing>SF_T08</outgoing>
+    </task>
+    <task id="Task_S6_GenerarDocFD" name="Generar Formulario F.D. y Comprobante de pago">
+      <incoming>SF_T17_SYS</incoming>
+      <outgoing>SF_T17</outgoing>
+    </task>
+    <task id="Task_B1_ProcesarPago" name="Procesar pago (QR Banco Unión / CPT / Otros)">
+      <incoming>SF_T16</incoming>
+      <outgoing>SF_B01</outgoing>
+    </task>
+    <task id="Task_B2_ConfirmarPago" name="Confirmar transacción exitosa">
+      <incoming>SF_B01</incoming>
+      <outgoing>SF_T17_SYS</outgoing>
+    </task>
+    <exclusiveGateway id="GW_T_Datos_OK" name="¿Datos correctos?">
+      <incoming>SF_T11</incoming>
+      <outgoing>SF_T12_SI</outgoing>
+      <outgoing>SF_T12_NO</outgoing>
+    </exclusiveGateway>
+    <endEvent id="End_Titulo_Estudiante" name="Requisitos entregados al Decanato">
+      <incoming>SF_T20</incoming>
+    </endEvent>
+    <task id="Task_T12_AdjuntarRequisitos" name="12. Adjuntar documentos físicos al trámite">
+      <incoming>SF_T19</incoming>
+      <outgoing>SF_T20</outgoing>
+    </task>
+    <task id="Task_T11_ImprimirDocs" name="11. Imprimir Formulario F.D. y Ver Comprobante">
+      <incoming>SF_T18_SI</incoming>
+      <outgoing>SF_T19</outgoing>
+    </task>
+    <task id="Task_S4_GenerarSolicitud" name="Generar solicitud con número de trámite">
+      <incoming>SF_T13</incoming>
+      <outgoing>SF_T14</outgoing>
+    </task>
+    <task id="Task_T9_Confirmacion" name="9. Confirmar datos (ventana de confirmación → Sí)">
+      <incoming>SF_T12_SI</incoming>
+      <outgoing>SF_T13</outgoing>
+    </task>
+    <task id="Task_T8_DatosBachiller" name="8. Seleccionar Área de Bachiller → Siguiente">
+      <incoming>SF_T10</incoming>
+      <outgoing>SF_T11</outgoing>
+    </task>
+    <exclusiveGateway id="GW_T_Pago_OK" name="¿Pago confirmado?">
+      <incoming>SF_T17</incoming>
+      <outgoing>SF_T18_SI</outgoing>
+      <outgoing>SF_T18_NO</outgoing>
+    </exclusiveGateway>
+    <task id="Task_T10_MetodoPago" name="10. Seleccionar Método de Pago → Enviar Solicitud">
+      <incoming>SF_T14</incoming>
+      <outgoing>SF_T15</outgoing>
+    </task>
+    <task id="Task_S5_ProcessPayment" name="Procesar orden de pago / CPT">
+      <incoming>SF_T15</incoming>
+      <outgoing>SF_T16</outgoing>
+    </task>
+    <task id="Task_D4_RechazarSolicitud" name="Notificar rechazo al estudiante con observaciones">
+      <incoming>SF_D03_NO</incoming>
+      <outgoing>SF_D05</outgoing>
+    </task>
+    <endEvent id="End_Titulo_Aprobado" name="Título Profesional emitido y entregado">
+      <incoming>SF_D06</incoming>
+    </endEvent>
+    <task id="Task_D5_EmitirTitulo" name="Emitir y registrar Título Profesional (Emisor)">
+      <incoming>SF_D04</incoming>
+      <outgoing>SF_D06</outgoing>
+    </task>
+    <task id="Task_D3_AprobarSolicitud" name="Aprobar solicitud de Título Profesional">
+      <incoming>SF_D03_SI</incoming>
+      <outgoing>SF_D04</outgoing>
+    </task>
+    <task id="Task_D1_RecibirSolicitud" name="Recibir expediente físico con requisitos">
+      <incoming>SF_T20_DEC</incoming>
+      <outgoing>SF_D01</outgoing>
+    </task>
+    <task id="Task_D2_VerificarRequisitos" name="Verificar documentación y requisitos">
+      <incoming>SF_D01</incoming>
+      <outgoing>SF_D02</outgoing>
+    </task>
+    <endEvent id="End_Titulo_Rechazado" name="Solicitud rechazada - Subsanar observaciones">
+      <incoming>SF_D05</incoming>
+    </endEvent>
+    <exclusiveGateway id="GW_D_Requisitos_OK" name="¿Documentación completa y válida?">
+      <incoming>SF_D02</incoming>
+      <outgoing>SF_D03_SI</outgoing>
+      <outgoing>SF_D03_NO</outgoing>
+    </exclusiveGateway>
+    <sequenceFlow id="SF_T01" sourceRef="Start_Titulo" targetRef="Task_T1_Acceso" />
+    <sequenceFlow id="SF_T02" sourceRef="Task_T1_Acceso" targetRef="Task_T2_Login" />
+    <sequenceFlow id="SF_T03" sourceRef="Task_T2_Login" targetRef="Task_S1_ValidarCredenciales" />
+    <sequenceFlow id="SF_T04" sourceRef="Task_S1_ValidarCredenciales" targetRef="Task_T3_NavMenu" />
+    <sequenceFlow id="SF_T05" sourceRef="Task_T3_NavMenu" targetRef="Task_T4_NuevaSolicitud" />
+    <sequenceFlow id="SF_T06" sourceRef="Task_T4_NuevaSolicitud" targetRef="Task_S2_MostrarFormulario" />
+    <sequenceFlow id="SF_T07" sourceRef="Task_S2_MostrarFormulario" targetRef="Task_T5_BuscarDatos" />
+    <sequenceFlow id="SF_T08_SYS" sourceRef="Task_T5_BuscarDatos" targetRef="Task_S3_RecuperarDatos" />
+    <sequenceFlow id="SF_T08" sourceRef="Task_S3_RecuperarDatos" targetRef="Task_T6_DatosPersonales" />
+    <sequenceFlow id="SF_T12_NO" name="No, revisar" sourceRef="GW_T_Datos_OK" targetRef="Task_T6_DatosPersonales" />
+    <sequenceFlow id="SF_T09" sourceRef="Task_T6_DatosPersonales" targetRef="Task_T7_DatosAcademicos" />
+    <sequenceFlow id="SF_T10" sourceRef="Task_T7_DatosAcademicos" targetRef="Task_T8_DatosBachiller" />
+    <sequenceFlow id="SF_T17_SYS" sourceRef="Task_B2_ConfirmarPago" targetRef="Task_S6_GenerarDocFD" />
+    <sequenceFlow id="SF_T17" sourceRef="Task_S6_GenerarDocFD" targetRef="GW_T_Pago_OK" />
+    <sequenceFlow id="SF_T16" sourceRef="Task_S5_ProcessPayment" targetRef="Task_B1_ProcesarPago" />
+    <sequenceFlow id="SF_B01" sourceRef="Task_B1_ProcesarPago" targetRef="Task_B2_ConfirmarPago" />
+    <sequenceFlow id="SF_T11" sourceRef="Task_T8_DatosBachiller" targetRef="GW_T_Datos_OK" />
+    <sequenceFlow id="SF_T12_SI" name="Sí, datos correctos" sourceRef="GW_T_Datos_OK" targetRef="Task_T9_Confirmacion" />
+    <sequenceFlow id="SF_T20" sourceRef="Task_T12_AdjuntarRequisitos" targetRef="End_Titulo_Estudiante" />
+    <sequenceFlow id="SF_T19" sourceRef="Task_T11_ImprimirDocs" targetRef="Task_T12_AdjuntarRequisitos" />
+    <sequenceFlow id="SF_T20_DEC" sourceRef="Task_T12_AdjuntarRequisitos" targetRef="Task_D1_RecibirSolicitud" />
+    <sequenceFlow id="SF_T18_SI" name="Pago confirmado" sourceRef="GW_T_Pago_OK" targetRef="Task_T11_ImprimirDocs" />
+    <sequenceFlow id="SF_T13" sourceRef="Task_T9_Confirmacion" targetRef="Task_S4_GenerarSolicitud" />
+    <sequenceFlow id="SF_T14" sourceRef="Task_S4_GenerarSolicitud" targetRef="Task_T10_MetodoPago" />
+    <sequenceFlow id="SF_T18_NO" name="Pago fallido" sourceRef="GW_T_Pago_OK" targetRef="Task_T10_MetodoPago" />
+    <sequenceFlow id="SF_T15" sourceRef="Task_T10_MetodoPago" targetRef="Task_S5_ProcessPayment" />
+    <sequenceFlow id="SF_D03_NO" name="Documentación incompleta" sourceRef="GW_D_Requisitos_OK" targetRef="Task_D4_RechazarSolicitud" />
+    <sequenceFlow id="SF_D05" sourceRef="Task_D4_RechazarSolicitud" targetRef="End_Titulo_Rechazado" />
+    <sequenceFlow id="SF_D06" sourceRef="Task_D5_EmitirTitulo" targetRef="End_Titulo_Aprobado" />
+    <sequenceFlow id="SF_D04" sourceRef="Task_D3_AprobarSolicitud" targetRef="Task_D5_EmitirTitulo" />
+    <sequenceFlow id="SF_D03_SI" name="Documentación completa" sourceRef="GW_D_Requisitos_OK" targetRef="Task_D3_AprobarSolicitud" />
+    <sequenceFlow id="SF_D01" sourceRef="Task_D1_RecibirSolicitud" targetRef="Task_D2_VerificarRequisitos" />
+    <sequenceFlow id="SF_D02" sourceRef="Task_D2_VerificarRequisitos" targetRef="GW_D_Requisitos_OK" />
+  </process>
+  <collaboration id="Collab_CertNoProc">
+    <participant id="Pool_Cert" name="Trámite: Certificado de No Tener Proceso Universitario" processRef="Proc_Cert" />
+  </collaboration>
+  <process id="Proc_Cert" isExecutable="false">
+    <laneSet id="LaneSet_Cert">
+      <lane id="Lane_C_Solicitante" name="Solicitante (Docente / Administrativo / Universitario - Remitente)">
+        <flowNodeRef>Start_Cert</flowNodeRef>
+        <flowNodeRef>Task_C1_PrepararDocs</flowNodeRef>
+        <flowNodeRef>Task_C2_AccesoWeb</flowNodeRef>
+        <flowNodeRef>Task_C3_NavCertificaciones</flowNodeRef>
+        <flowNodeRef>Task_C4_NuevaSolicitudCert</flowNodeRef>
+        <flowNodeRef>Task_C5_DatosPersonalesCert</flowNodeRef>
+        <flowNodeRef>Task_C6_AdjuntarCarnet</flowNodeRef>
+        <flowNodeRef>Task_C7_DatosCertificado</flowNodeRef>
+        <flowNodeRef>Task_C8_Finalizar</flowNodeRef>
+        <flowNodeRef>Task_C9_ObtenerCPT</flowNodeRef>
+        <flowNodeRef>Task_C10_DescargarOrden</flowNodeRef>
+        <flowNodeRef>Task_C12_ImprimirCertificado</flowNodeRef>
+        <flowNodeRef>End_Cert_Solicitante</flowNodeRef>
+        <flowNodeRef>GW_C_Datos_OK</flowNodeRef>
+      </lane>
+      <lane id="Lane_C_Sistema" name="Sistema UMSA (tramitesenlinea.umsa.bo)">
+        <flowNodeRef>Task_CS1_RegistrarSolicitud</flowNodeRef>
+        <flowNodeRef>Task_CS2_GenerarCPT</flowNodeRef>
+        <flowNodeRef>Task_CS3_ActualizarEstado</flowNodeRef>
+        <flowNodeRef>Task_CS4_GenerarCertificado</flowNodeRef>
+      </lane>
+      <lane id="Lane_C_Banco" name="Entidad Bancaria Autorizada">
+        <flowNodeRef>Task_CB1_RealizarPago</flowNodeRef>
+        <flowNodeRef>Task_CB2_ConfirmarPagoCert</flowNodeRef>
+      </lane>
+      <lane id="Lane_C_Comision" name="Comisión Universitaria de Procesos (Aprobador / Emisor)">
+        <flowNodeRef>Task_CP1_RecibirSolicitud</flowNodeRef>
+        <flowNodeRef>Task_CP2_RevisionExpediente</flowNodeRef>
+        <flowNodeRef>GW_CP_Proceso_Existe</flowNodeRef>
+        <flowNodeRef>Task_CP3_EmitirCertificado</flowNodeRef>
+        <flowNodeRef>Task_CP4_DenegarCertificado</flowNodeRef>
+        <flowNodeRef>Task_CP5_NotificarSolicitante</flowNodeRef>
+        <flowNodeRef>End_Cert_Aprobado</flowNodeRef>
+        <flowNodeRef>End_Cert_Denegado</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="Start_Cert" name="Inicio: Solicitud Certificado No Procesos">
+      <outgoing>SFC_01</outgoing>
+    </startEvent>
+    <task id="Task_C1_PrepararDocs" name="0. Preparar documentos previos (CI digital + matrícula si es universitario)">
+      <incoming>SFC_01</incoming>
+      <outgoing>SFC_02</outgoing>
+    </task>
+    <task id="Task_C2_AccesoWeb" name="1. Acceder a tramitesenlinea.umsa.bo">
+      <incoming>SFC_02</incoming>
+      <outgoing>SFC_03</outgoing>
+    </task>
+    <task id="Task_C3_NavCertificaciones" name="2. Navegar a CERTIFICACIONES → Certificado No Procesos Universitarios">
+      <incoming>SFC_03</incoming>
+      <outgoing>SFC_04</outgoing>
+    </task>
+    <task id="Task_C4_NuevaSolicitudCert" name="3. Hacer clic en + NUEVA SOLICITUD">
+      <incoming>SFC_04</incoming>
+      <outgoing>SFC_05</outgoing>
+    </task>
+    <task id="Task_C5_DatosPersonalesCert" name="4. Completar Datos Personales (Estamento, Correo, Celular)">
+      <incoming>SFC_05</incoming>
+      <outgoing>SFC_06</outgoing>
+    </task>
+    <task id="Task_C6_AdjuntarCarnet" name="5. Adjuntar copia digital del CI (PDF o imagen) → Siguiente">
+      <incoming>SFC_06</incoming>
+      <outgoing>SFC_07</outgoing>
+    </task>
+    <task id="Task_C7_DatosCertificado" name="6. Completar Datos del Certificado (Objeto, Unidad a postular, Convocatoria)">
+      <incoming>SFC_07</incoming>
+      <outgoing>SFC_08</outgoing>
+    </task>
+    <exclusiveGateway id="GW_C_Datos_OK" name="¿Datos del certificado correctos?">
+      <incoming>SFC_08</incoming>
+      <outgoing>SFC_09_SI</outgoing>
+      <outgoing>SFC_09_NO</outgoing>
+    </exclusiveGateway>
+    <task id="Task_C8_Finalizar" name="7. Hacer clic en Finalizar → Confirmar con Sí">
+      <incoming>SFC_09_SI</incoming>
+      <outgoing>SFC_10</outgoing>
+    </task>
+    <task id="Task_C9_ObtenerCPT" name="9. Ver monto a cancelar y Código CPT generado">
+      <incoming>SFC_12</incoming>
+      <outgoing>SFC_13</outgoing>
+    </task>
+    <task id="Task_C10_DescargarOrden" name="10. Descargar Orden de Pago (PDF con datos CPT)">
+      <incoming>SFC_13</incoming>
+      <outgoing>SFC_14</outgoing>
+    </task>
+    <task id="Task_C12_ImprimirCertificado" name="12. Imprimir Certificado (botón verde Imprimir)">
+      <incoming>SFC_18</incoming>
+      <outgoing>SFC_19</outgoing>
+    </task>
+    <endEvent id="End_Cert_Solicitante" name="Certificado descargado e impreso">
+      <incoming>SFC_19</incoming>
+    </endEvent>
+    <task id="Task_CS1_RegistrarSolicitud" name="8. Registrar solicitud → Enviar aviso a Comisión Universitaria">
+      <incoming>SFC_10</incoming>
+      <outgoing>SFC_11</outgoing>
+    </task>
+    <task id="Task_CS2_GenerarCPT" name="Generar Código CPT y monto de pago">
+      <incoming>SFC_11</incoming>
+      <outgoing>SFC_12</outgoing>
+    </task>
+    <task id="Task_CS3_ActualizarEstado" name="Actualizar estado a Trámite Concluido">
+      <incoming>SFC_17</incoming>
+      <outgoing>SFC_18</outgoing>
+    </task>
+    <task id="Task_CS4_GenerarCertificado" name="Generar PDF del Certificado listo para descarga">
+      <incoming>SFC_CP04</incoming>
+      <outgoing>SFC_17</outgoing>
+    </task>
+    <task id="Task_CB1_RealizarPago" name="11. Realizar pago CPT en entidad autorizada">
+      <incoming>SFC_14</incoming>
+      <outgoing>SFC_15</outgoing>
+    </task>
+    <task id="Task_CB2_ConfirmarPagoCert" name="Confirmar pago y notificar al sistema">
+      <incoming>SFC_15</incoming>
+      <outgoing>SFC_16</outgoing>
+    </task>
+    <task id="Task_CP1_RecibirSolicitud" name="Recibir solicitud del sistema (plazo: 48 horas hábiles)">
+      <incoming>SFC_11_COM</incoming>
+      <outgoing>SFC_CP01</outgoing>
+    </task>
+    <task id="Task_CP2_RevisionExpediente" name="Revisar antecedentes del solicitante en registros universitarios">
+      <incoming>SFC_16</incoming>
+      <outgoing>SFC_CP02</outgoing>
+    </task>
+    <exclusiveGateway id="GW_CP_Proceso_Existe" name="¿Existe proceso universitario vigente?">
+      <incoming>SFC_CP02</incoming>
+      <outgoing>SFC_CP03_NO</outgoing>
+      <outgoing>SFC_CP03_SI</outgoing>
+    </exclusiveGateway>
+    <task id="Task_CP3_EmitirCertificado" name="Aprobar y emitir Certificado de No Proceso (Emisor)">
+      <incoming>SFC_CP03_NO</incoming>
+      <outgoing>SFC_CP04</outgoing>
+    </task>
+    <task id="Task_CP4_DenegarCertificado" name="Denegar solicitud: existe proceso activo">
+      <incoming>SFC_CP03_SI</incoming>
+      <outgoing>SFC_CP05</outgoing>
+    </task>
+    <task id="Task_CP5_NotificarSolicitante" name="Notificar al solicitante vía correo electrónico">
+      <incoming>SFC_CP05</incoming>
+      <outgoing>SFC_CP06</outgoing>
+    </task>
+    <endEvent id="End_Cert_Aprobado" name="Certificado emitido y disponible para descarga">
+      <incoming>SFC_CP04_END</incoming>
+    </endEvent>
+    <endEvent id="End_Cert_Denegado" name="Solicitud denegada - Proceso universitario activo">
+      <incoming>SFC_CP06</incoming>
+    </endEvent>
+    <sequenceFlow id="SFC_01" sourceRef="Start_Cert" targetRef="Task_C1_PrepararDocs" />
+    <sequenceFlow id="SFC_02" sourceRef="Task_C1_PrepararDocs" targetRef="Task_C2_AccesoWeb" />
+    <sequenceFlow id="SFC_03" sourceRef="Task_C2_AccesoWeb" targetRef="Task_C3_NavCertificaciones" />
+    <sequenceFlow id="SFC_04" sourceRef="Task_C3_NavCertificaciones" targetRef="Task_C4_NuevaSolicitudCert" />
+    <sequenceFlow id="SFC_05" sourceRef="Task_C4_NuevaSolicitudCert" targetRef="Task_C5_DatosPersonalesCert" />
+    <sequenceFlow id="SFC_06" sourceRef="Task_C5_DatosPersonalesCert" targetRef="Task_C6_AdjuntarCarnet" />
+    <sequenceFlow id="SFC_07" sourceRef="Task_C6_AdjuntarCarnet" targetRef="Task_C7_DatosCertificado" />
+    <sequenceFlow id="SFC_08" sourceRef="Task_C7_DatosCertificado" targetRef="GW_C_Datos_OK" />
+    <sequenceFlow id="SFC_09_SI" name="Sí, confirmar" sourceRef="GW_C_Datos_OK" targetRef="Task_C8_Finalizar" />
+    <sequenceFlow id="SFC_09_NO" name="No, corregir" sourceRef="GW_C_Datos_OK" targetRef="Task_C7_DatosCertificado" />
+    <sequenceFlow id="SFC_10" sourceRef="Task_C8_Finalizar" targetRef="Task_CS1_RegistrarSolicitud" />
+    <sequenceFlow id="SFC_11" sourceRef="Task_CS1_RegistrarSolicitud" targetRef="Task_CS2_GenerarCPT" />
+    <sequenceFlow id="SFC_11_COM" sourceRef="Task_CS1_RegistrarSolicitud" targetRef="Task_CP1_RecibirSolicitud" />
+    <sequenceFlow id="SFC_12" sourceRef="Task_CS2_GenerarCPT" targetRef="Task_C9_ObtenerCPT" />
+    <sequenceFlow id="SFC_13" sourceRef="Task_C9_ObtenerCPT" targetRef="Task_C10_DescargarOrden" />
+    <sequenceFlow id="SFC_14" sourceRef="Task_C10_DescargarOrden" targetRef="Task_CB1_RealizarPago" />
+    <sequenceFlow id="SFC_15" sourceRef="Task_CB1_RealizarPago" targetRef="Task_CB2_ConfirmarPagoCert" />
+    <sequenceFlow id="SFC_16" sourceRef="Task_CB2_ConfirmarPagoCert" targetRef="Task_CP2_RevisionExpediente" />
+    <sequenceFlow id="SFC_CP01" sourceRef="Task_CP1_RecibirSolicitud" targetRef="Task_CP2_RevisionExpediente" />
+    <sequenceFlow id="SFC_CP02" sourceRef="Task_CP2_RevisionExpediente" targetRef="GW_CP_Proceso_Existe" />
+    <sequenceFlow id="SFC_CP03_NO" name="No hay proceso" sourceRef="GW_CP_Proceso_Existe" targetRef="Task_CP3_EmitirCertificado" />
+    <sequenceFlow id="SFC_CP03_SI" name="Proceso vigente" sourceRef="GW_CP_Proceso_Existe" targetRef="Task_CP4_DenegarCertificado" />
+    <sequenceFlow id="SFC_CP04" sourceRef="Task_CP3_EmitirCertificado" targetRef="Task_CS4_GenerarCertificado" />
+    <sequenceFlow id="SFC_CP04_END" sourceRef="Task_CP3_EmitirCertificado" targetRef="End_Cert_Aprobado" />
+    <sequenceFlow id="SFC_CP05" sourceRef="Task_CP4_DenegarCertificado" targetRef="Task_CP5_NotificarSolicitante" />
+    <sequenceFlow id="SFC_CP06" sourceRef="Task_CP5_NotificarSolicitante" targetRef="End_Cert_Denegado" />
+    <sequenceFlow id="SFC_17" sourceRef="Task_CS4_GenerarCertificado" targetRef="Task_CS3_ActualizarEstado" />
+    <sequenceFlow id="SFC_18" sourceRef="Task_CS3_ActualizarEstado" targetRef="Task_C12_ImprimirCertificado" />
+    <sequenceFlow id="SFC_19" sourceRef="Task_C12_ImprimirCertificado" targetRef="End_Cert_Solicitante" />
+  </process>
+  <bpmndi:BPMNDiagram id="BpmnDiagram_1">
+    <bpmndi:BPMNPlane id="BpmnPlane_1" bpmnElement="Collab_TituloProfesional">
+      <bpmndi:BPMNShape id="Pool_Titulo_di" bpmnElement="Pool_Titulo" isHorizontal="true">
+        <omgdc:Bounds x="151" y="80" width="2207" height="850" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Decanato_di" bpmnElement="Lane_Decanato" isHorizontal="true">
+        <omgdc:Bounds x="181" y="610" width="2177" height="320" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Banco_di" bpmnElement="Lane_Banco" isHorizontal="true">
+        <omgdc:Bounds x="181" y="490" width="2177" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_SistemaUMSA_di" bpmnElement="Lane_SistemaUMSA" isHorizontal="true">
+        <omgdc:Bounds x="181" y="350" width="2177" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Estudiante_di" bpmnElement="Lane_Estudiante" isHorizontal="true">
+        <omgdc:Bounds x="181" y="80" width="2177" height="270" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Titulo_di" bpmnElement="Start_Titulo">
+        <omgdc:Bounds x="256" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="231" y="295" width="86" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T1_Acceso_di" bpmnElement="Task_T1_Acceso">
+        <omgdc:Bounds x="334" y="230" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T2_Login_di" bpmnElement="Task_T2_Login">
+        <omgdc:Bounds x="494" y="230" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T3_NavMenu_di" bpmnElement="Task_T3_NavMenu">
+        <omgdc:Bounds x="674" y="230" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T4_NuevaSolicitud_di" bpmnElement="Task_T4_NuevaSolicitud">
+        <omgdc:Bounds x="834" y="230" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T5_BuscarDatos_di" bpmnElement="Task_T5_BuscarDatos">
+        <omgdc:Bounds x="1004" y="230" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T6_DatosPersonales_di" bpmnElement="Task_T6_DatosPersonales">
+        <omgdc:Bounds x="1164" y="230" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T7_DatosAcademicos_di" bpmnElement="Task_T7_DatosAcademicos">
+        <omgdc:Bounds x="1324" y="230" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_S1_ValidarCredenciales_di" bpmnElement="Task_S1_ValidarCredenciales">
+        <omgdc:Bounds x="494" y="380" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_S2_MostrarFormulario_di" bpmnElement="Task_S2_MostrarFormulario">
+        <omgdc:Bounds x="834" y="380" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_S3_RecuperarDatos_di" bpmnElement="Task_S3_RecuperarDatos">
+        <omgdc:Bounds x="1004" y="380" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_S6_GenerarDocFD_di" bpmnElement="Task_S6_GenerarDocFD">
+        <omgdc:Bounds x="1324" y="380" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_B1_ProcesarPago_di" bpmnElement="Task_B1_ProcesarPago">
+        <omgdc:Bounds x="1484" y="510" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_B2_ConfirmarPago_di" bpmnElement="Task_B2_ConfirmarPago">
+        <omgdc:Bounds x="1324" y="510" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_T_Datos_OK_di" bpmnElement="GW_T_Datos_OK" isMarkerVisible="true">
+        <omgdc:Bounds x="1639" y="145" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1619" y="121" width="90" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Titulo_Estudiante_di" bpmnElement="End_Titulo_Estudiante">
+        <omgdc:Bounds x="2270" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="2257" y="285" width="67" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T12_AdjuntarRequisitos_di" bpmnElement="Task_T12_AdjuntarRequisitos">
+        <omgdc:Bounds x="2068" y="240" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T11_ImprimirDocs_di" bpmnElement="Task_T11_ImprimirDocs">
+        <omgdc:Bounds x="1878" y="285" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_S4_GenerarSolicitud_di" bpmnElement="Task_S4_GenerarSolicitud">
+        <omgdc:Bounds x="1744" y="410" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T9_Confirmacion_di" bpmnElement="Task_T9_Confirmacion">
+        <omgdc:Bounds x="1744" y="200" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T8_DatosBachiller_di" bpmnElement="Task_T8_DatosBachiller">
+        <omgdc:Bounds x="1484" y="217" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_T_Pago_OK_di" bpmnElement="GW_T_Pago_OK" isMarkerVisible="true">
+        <omgdc:Bounds x="1684" y="290" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1678" y="252.5" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_T10_MetodoPago_di" bpmnElement="Task_T10_MetodoPago">
+        <omgdc:Bounds x="1468" y="290" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_S5_ProcessPayment_di" bpmnElement="Task_S5_ProcessPayment">
+        <omgdc:Bounds x="1468" y="390" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_D4_RechazarSolicitud_di" bpmnElement="Task_D4_RechazarSolicitud">
+        <omgdc:Bounds x="1649" y="830" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Titulo_Aprobado_di" bpmnElement="End_Titulo_Aprobado">
+        <omgdc:Bounds x="1090" y="652" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1065" y="695" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_D5_EmitirTitulo_di" bpmnElement="Task_D5_EmitirTitulo">
+        <omgdc:Bounds x="1248" y="680" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_D3_AprobarSolicitud_di" bpmnElement="Task_D3_AprobarSolicitud">
+        <omgdc:Bounds x="1404" y="680" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_D1_RecibirSolicitud_di" bpmnElement="Task_D1_RecibirSolicitud">
+        <omgdc:Bounds x="1958" y="640" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_D2_VerificarRequisitos_di" bpmnElement="Task_D2_VerificarRequisitos">
+        <omgdc:Bounds x="1788" y="640" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Titulo_Rechazado_di" bpmnElement="End_Titulo_Rechazado">
+        <omgdc:Bounds x="1880" y="822" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1915" y="823" width="85" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_D_Requisitos_OK_di" bpmnElement="GW_D_Requisitos_OK" isMarkerVisible="true">
+        <omgdc:Bounds x="1639" y="685" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1638" y="635" width="84" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SF_T01_di" bpmnElement="SF_T01">
+        <omgdi:waypoint x="292" y="270" />
+        <omgdi:waypoint x="334" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T02_di" bpmnElement="SF_T02">
+        <omgdi:waypoint x="454" y="260" />
+        <omgdi:waypoint x="494" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T03_di" bpmnElement="SF_T03">
+        <omgdi:waypoint x="554" y="290" />
+        <omgdi:waypoint x="554" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T04_di" bpmnElement="SF_T04">
+        <omgdi:waypoint x="614" y="410" />
+        <omgdi:waypoint x="674" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T05_di" bpmnElement="SF_T05">
+        <omgdi:waypoint x="794" y="260" />
+        <omgdi:waypoint x="834" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T06_di" bpmnElement="SF_T06">
+        <omgdi:waypoint x="894" y="290" />
+        <omgdi:waypoint x="894" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T07_di" bpmnElement="SF_T07">
+        <omgdi:waypoint x="954" y="410" />
+        <omgdi:waypoint x="1004" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T08_SYS_di" bpmnElement="SF_T08_SYS">
+        <omgdi:waypoint x="1064" y="290" />
+        <omgdi:waypoint x="1064" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T08_di" bpmnElement="SF_T08">
+        <omgdi:waypoint x="1124" y="410" />
+        <omgdi:waypoint x="1164" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T12_NO_di" bpmnElement="SF_T12_NO">
+        <omgdi:waypoint x="1639" y="170" />
+        <omgdi:waypoint x="1224" y="170" />
+        <omgdi:waypoint x="1224" y="230" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1405" y="145" width="54" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T09_di" bpmnElement="SF_T09">
+        <omgdi:waypoint x="1284" y="260" />
+        <omgdi:waypoint x="1324" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T10_di" bpmnElement="SF_T10">
+        <omgdi:waypoint x="1444" y="260" />
+        <omgdi:waypoint x="1464" y="260" />
+        <omgdi:waypoint x="1464" y="247" />
+        <omgdi:waypoint x="1484" y="247" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T17_SYS_di" bpmnElement="SF_T17_SYS">
+        <omgdi:waypoint x="1384" y="510" />
+        <omgdi:waypoint x="1384" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T17_di" bpmnElement="SF_T17">
+        <omgdi:waypoint x="1434" y="380" />
+        <omgdi:waypoint x="1709" y="380" />
+        <omgdi:waypoint x="1709" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T16_di" bpmnElement="SF_T16">
+        <omgdi:waypoint x="1528" y="450" />
+        <omgdi:waypoint x="1528" y="480" />
+        <omgdi:waypoint x="1544" y="480" />
+        <omgdi:waypoint x="1544" y="510" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_B01_di" bpmnElement="SF_B01">
+        <omgdi:waypoint x="1484" y="540" />
+        <omgdi:waypoint x="1444" y="540" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T11_di" bpmnElement="SF_T11">
+        <omgdi:waypoint x="1604" y="234" />
+        <omgdi:waypoint x="1664" y="234" />
+        <omgdi:waypoint x="1664" y="195" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T12_SI_di" bpmnElement="SF_T12_SI">
+        <omgdi:waypoint x="1664" y="195" />
+        <omgdi:waypoint x="1664" y="217" />
+        <omgdi:waypoint x="1744" y="217" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1671" y="180" width="46" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T20_di" bpmnElement="SF_T20">
+        <omgdi:waypoint x="2188" y="265" />
+        <omgdi:waypoint x="2229" y="265" />
+        <omgdi:waypoint x="2229" y="261" />
+        <omgdi:waypoint x="2270" y="261" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T19_di" bpmnElement="SF_T19">
+        <omgdi:waypoint x="1998" y="315" />
+        <omgdi:waypoint x="2033" y="315" />
+        <omgdi:waypoint x="2033" y="270" />
+        <omgdi:waypoint x="2068" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T20_DEC_di" bpmnElement="SF_T20_DEC">
+        <omgdi:waypoint x="2128" y="300" />
+        <omgdi:waypoint x="2128" y="470" />
+        <omgdi:waypoint x="2018" y="470" />
+        <omgdi:waypoint x="2018" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T18_SI_di" bpmnElement="SF_T18_SI">
+        <omgdi:waypoint x="1732" y="317" />
+        <omgdi:waypoint x="1769" y="317" />
+        <omgdi:waypoint x="1769" y="311" />
+        <omgdi:waypoint x="1878" y="311" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1776" y="292" width="84" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T13_di" bpmnElement="SF_T13">
+        <omgdi:waypoint x="1804" y="260" />
+        <omgdi:waypoint x="1804" y="410" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T14_di" bpmnElement="SF_T14">
+        <omgdi:waypoint x="1744" y="440" />
+        <omgdi:waypoint x="1674" y="440" />
+        <omgdi:waypoint x="1674" y="330" />
+        <omgdi:waypoint x="1598" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T18_NO_di" bpmnElement="SF_T18_NO">
+        <omgdi:waypoint x="1686" y="317" />
+        <omgdi:waypoint x="1644" y="317" />
+        <omgdi:waypoint x="1644" y="311" />
+        <omgdi:waypoint x="1588" y="311" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1635" y="293" width="58" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_T15_di" bpmnElement="SF_T15">
+        <omgdi:waypoint x="1528" y="340" />
+        <omgdi:waypoint x="1528" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_D03_NO_di" bpmnElement="SF_D03_NO">
+        <omgdi:waypoint x="1664" y="735" />
+        <omgdi:waypoint x="1664" y="783" />
+        <omgdi:waypoint x="1674" y="783" />
+        <omgdi:waypoint x="1674" y="830" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1669" y="751" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_D05_di" bpmnElement="SF_D05">
+        <omgdi:waypoint x="1769" y="860" />
+        <omgdi:waypoint x="1810" y="860" />
+        <omgdi:waypoint x="1810" y="840" />
+        <omgdi:waypoint x="1880" y="840" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_D06_di" bpmnElement="SF_D06">
+        <omgdi:waypoint x="1248" y="705" />
+        <omgdi:waypoint x="1197" y="705" />
+        <omgdi:waypoint x="1197" y="672" />
+        <omgdi:waypoint x="1126" y="672" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_D04_di" bpmnElement="SF_D04">
+        <omgdi:waypoint x="1404" y="710" />
+        <omgdi:waypoint x="1368" y="710" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_D03_SI_di" bpmnElement="SF_D03_SI">
+        <omgdi:waypoint x="1645" y="716" />
+        <omgdi:waypoint x="1604" y="716" />
+        <omgdi:waypoint x="1604" y="697" />
+        <omgdi:waypoint x="1524" y="697" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1537" y="666" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_D01_di" bpmnElement="SF_D01">
+        <omgdi:waypoint x="1958" y="670" />
+        <omgdi:waypoint x="1908" y="670" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SF_D02_di" bpmnElement="SF_D02">
+        <omgdi:waypoint x="1788" y="657" />
+        <omgdi:waypoint x="1722" y="657" />
+        <omgdi:waypoint x="1722" y="716" />
+        <omgdi:waypoint x="1683" y="716" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram id="BpmnDiagram_2">
+    <bpmndi:BPMNPlane id="BpmnPlane_2" bpmnElement="Collab_CertNoProc">
+      <bpmndi:BPMNShape id="Pool_Cert_di" bpmnElement="Pool_Cert" isHorizontal="true">
+        <omgdc:Bounds x="160" y="720" width="2000" height="680" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_C_Solicitante_di" bpmnElement="Lane_C_Solicitante" isHorizontal="true">
+        <omgdc:Bounds x="190" y="720" width="1970" height="170" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_C_Sistema_di" bpmnElement="Lane_C_Sistema" isHorizontal="true">
+        <omgdc:Bounds x="190" y="890" width="1970" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_C_Banco_di" bpmnElement="Lane_C_Banco" isHorizontal="true">
+        <omgdc:Bounds x="190" y="1030" width="1970" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_C_Comision_di" bpmnElement="Lane_C_Comision" isHorizontal="true">
+        <omgdc:Bounds x="190" y="1160" width="1970" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Cert_di" bpmnElement="Start_Cert">
+        <omgdc:Bounds x="222" y="790" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="200" y="833" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_C1_PrepararDocs_di" bpmnElement="Task_C1_PrepararDocs">
+        <omgdc:Bounds x="290" y="778" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_C2_AccesoWeb_di" bpmnElement="Task_C2_AccesoWeb">
+        <omgdc:Bounds x="450" y="778" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_C3_NavCertificaciones_di" bpmnElement="Task_C3_NavCertificaciones">
+        <omgdc:Bounds x="610" y="778" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_C4_NuevaSolicitudCert_di" bpmnElement="Task_C4_NuevaSolicitudCert">
+        <omgdc:Bounds x="770" y="778" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_C5_DatosPersonalesCert_di" bpmnElement="Task_C5_DatosPersonalesCert">
+        <omgdc:Bounds x="930" y="778" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_C6_AdjuntarCarnet_di" bpmnElement="Task_C6_AdjuntarCarnet">
+        <omgdc:Bounds x="1090" y="778" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_C7_DatosCertificado_di" bpmnElement="Task_C7_DatosCertificado">
+        <omgdc:Bounds x="1250" y="778" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_C_Datos_OK_di" bpmnElement="GW_C_Datos_OK" isMarkerVisible="true">
+        <omgdc:Bounds x="1415" y="793" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1400" y="850" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_C8_Finalizar_di" bpmnElement="Task_C8_Finalizar">
+        <omgdc:Bounds x="1510" y="778" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_C9_ObtenerCPT_di" bpmnElement="Task_C9_ObtenerCPT">
+        <omgdc:Bounds x="1090" y="840" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_C10_DescargarOrden_di" bpmnElement="Task_C10_DescargarOrden">
+        <omgdc:Bounds x="930" y="840" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_C12_ImprimirCertificado_di" bpmnElement="Task_C12_ImprimirCertificado">
+        <omgdc:Bounds x="610" y="840" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Cert_Solicitante_di" bpmnElement="End_Cert_Solicitante">
+        <omgdc:Bounds x="450" y="847" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="428" y="890" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CS1_RegistrarSolicitud_di" bpmnElement="Task_CS1_RegistrarSolicitud">
+        <omgdc:Bounds x="1510" y="910" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CS2_GenerarCPT_di" bpmnElement="Task_CS2_GenerarCPT">
+        <omgdc:Bounds x="1250" y="910" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CS3_ActualizarEstado_di" bpmnElement="Task_CS3_ActualizarEstado">
+        <omgdc:Bounds x="610" y="910" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CS4_GenerarCertificado_di" bpmnElement="Task_CS4_GenerarCertificado">
+        <omgdc:Bounds x="770" y="910" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CB1_RealizarPago_di" bpmnElement="Task_CB1_RealizarPago">
+        <omgdc:Bounds x="930" y="1055" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CB2_ConfirmarPagoCert_di" bpmnElement="Task_CB2_ConfirmarPagoCert">
+        <omgdc:Bounds x="1090" y="1055" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CP1_RecibirSolicitud_di" bpmnElement="Task_CP1_RecibirSolicitud">
+        <omgdc:Bounds x="1510" y="1200" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CP2_RevisionExpediente_di" bpmnElement="Task_CP2_RevisionExpediente">
+        <omgdc:Bounds x="1250" y="1200" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="GW_CP_Proceso_Existe_di" bpmnElement="GW_CP_Proceso_Existe" isMarkerVisible="true">
+        <omgdc:Bounds x="1095" y="1215" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1075" y="1272" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CP3_EmitirCertificado_di" bpmnElement="Task_CP3_EmitirCertificado">
+        <omgdc:Bounds x="930" y="1200" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CP4_DenegarCertificado_di" bpmnElement="Task_CP4_DenegarCertificado">
+        <omgdc:Bounds x="1095" y="1310" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CP5_NotificarSolicitante_di" bpmnElement="Task_CP5_NotificarSolicitante">
+        <omgdc:Bounds x="930" y="1310" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Cert_Aprobado_di" bpmnElement="End_Cert_Aprobado">
+        <omgdc:Bounds x="792" y="1218" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="770" y="1261" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Cert_Denegado_di" bpmnElement="End_Cert_Denegado">
+        <omgdc:Bounds x="792" y="1325" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="770" y="1368" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SFC_01_di" bpmnElement="SFC_01">
+        <omgdi:waypoint x="258" y="808" />
+        <omgdi:waypoint x="290" y="808" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_02_di" bpmnElement="SFC_02">
+        <omgdi:waypoint x="410" y="808" />
+        <omgdi:waypoint x="450" y="808" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_03_di" bpmnElement="SFC_03">
+        <omgdi:waypoint x="570" y="808" />
+        <omgdi:waypoint x="610" y="808" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_04_di" bpmnElement="SFC_04">
+        <omgdi:waypoint x="730" y="808" />
+        <omgdi:waypoint x="770" y="808" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_05_di" bpmnElement="SFC_05">
+        <omgdi:waypoint x="890" y="808" />
+        <omgdi:waypoint x="930" y="808" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_06_di" bpmnElement="SFC_06">
+        <omgdi:waypoint x="1050" y="808" />
+        <omgdi:waypoint x="1090" y="808" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_07_di" bpmnElement="SFC_07">
+        <omgdi:waypoint x="1210" y="808" />
+        <omgdi:waypoint x="1250" y="808" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_08_di" bpmnElement="SFC_08">
+        <omgdi:waypoint x="1370" y="808" />
+        <omgdi:waypoint x="1415" y="818" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_09_SI_di" bpmnElement="SFC_09_SI">
+        <omgdi:waypoint x="1465" y="818" />
+        <omgdi:waypoint x="1510" y="808" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_09_NO_di" bpmnElement="SFC_09_NO">
+        <omgdi:waypoint x="1440" y="793" />
+        <omgdi:waypoint x="1440" y="760" />
+        <omgdi:waypoint x="1310" y="760" />
+        <omgdi:waypoint x="1310" y="778" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_10_di" bpmnElement="SFC_10">
+        <omgdi:waypoint x="1570" y="838" />
+        <omgdi:waypoint x="1570" y="910" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_11_di" bpmnElement="SFC_11">
+        <omgdi:waypoint x="1510" y="940" />
+        <omgdi:waypoint x="1370" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_11_COM_di" bpmnElement="SFC_11_COM">
+        <omgdi:waypoint x="1570" y="970" />
+        <omgdi:waypoint x="1570" y="1200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_12_di" bpmnElement="SFC_12">
+        <omgdi:waypoint x="1310" y="910" />
+        <omgdi:waypoint x="1210" y="865" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_13_di" bpmnElement="SFC_13">
+        <omgdi:waypoint x="1090" y="865" />
+        <omgdi:waypoint x="1050" y="865" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_14_di" bpmnElement="SFC_14">
+        <omgdi:waypoint x="990" y="890" />
+        <omgdi:waypoint x="990" y="1055" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_15_di" bpmnElement="SFC_15">
+        <omgdi:waypoint x="1050" y="1085" />
+        <omgdi:waypoint x="1090" y="1085" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_16_di" bpmnElement="SFC_16">
+        <omgdi:waypoint x="1150" y="1115" />
+        <omgdi:waypoint x="1310" y="1200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_CP01_di" bpmnElement="SFC_CP01">
+        <omgdi:waypoint x="1510" y="1230" />
+        <omgdi:waypoint x="1370" y="1230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_CP02_di" bpmnElement="SFC_CP02">
+        <omgdi:waypoint x="1250" y="1230" />
+        <omgdi:waypoint x="1145" y="1240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_CP03_NO_di" bpmnElement="SFC_CP03_NO">
+        <omgdi:waypoint x="1095" y="1240" />
+        <omgdi:waypoint x="1050" y="1230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_CP03_SI_di" bpmnElement="SFC_CP03_SI">
+        <omgdi:waypoint x="1120" y="1265" />
+        <omgdi:waypoint x="1120" y="1310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_CP04_di" bpmnElement="SFC_CP04">
+        <omgdi:waypoint x="930" y="1230" />
+        <omgdi:waypoint x="890" y="1230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_CP04_END_di" bpmnElement="SFC_CP04_END">
+        <omgdi:waypoint x="930" y="1236" />
+        <omgdi:waypoint x="828" y="1236" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_CP05_di" bpmnElement="SFC_CP05">
+        <omgdi:waypoint x="1095" y="1340" />
+        <omgdi:waypoint x="1050" y="1340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_CP06_di" bpmnElement="SFC_CP06">
+        <omgdi:waypoint x="930" y="1340" />
+        <omgdi:waypoint x="828" y="1343" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_17_di" bpmnElement="SFC_17">
+        <omgdi:waypoint x="830" y="970" />
+        <omgdi:waypoint x="730" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_18_di" bpmnElement="SFC_18">
+        <omgdi:waypoint x="670" y="910" />
+        <omgdi:waypoint x="670" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SFC_19_di" bpmnElement="SFC_19">
+        <omgdi:waypoint x="610" y="865" />
+        <omgdi:waypoint x="486" y="865" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
