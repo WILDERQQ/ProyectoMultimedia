@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro de Suavizado (3x3) - Estudiantes</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 30, 49, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.1) 0px, transparent 50%);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .description {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .student-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .student-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 30px;
+            text-align: center;
+            backdrop-filter: blur(12px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .student-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(168, 85, 247, 0.3);
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.1);
+        }
+
+        .student-card:hover::before {
+            opacity: 1;
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-purple);
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .student-card:hover .avatar {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: rgba(168, 85, 247, 0.3);
+            transform: scale(1.05);
+        }
+
+        .student-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .role {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-view {
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--accent-purple);
+            transition: gap 0.2s;
+        }
+
+        .student-card:hover .btn-view {
+            gap: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="back-link">
+            <i data-lucide="arrow-left"></i>
+            Volver al Panel Principal
+        </a>
+        <div style="font-size: 0.85rem; color: var(--accent-purple); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+            Actividad Individual B
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>Filtro de Suavizado (3x3)</h1>
+            <p class="description">Selecciona un estudiante para inspeccionar su laboratorio individual de procesamiento de imágenes con filtros convolucionales en Canvas.</p>
+        </div>
+
+        <div class="student-grid">
+            <!-- Jeremy -->
+            <a href="individuales/jeremy/filtro.html" class="student-card">
+                <div class="avatar">JE</div>
+                <div class="student-name">Jeremy</div>
+                <div class="role">Estudiante</div>
+                <div class="btn-view">
+                    <span>Ver Laboratorio</span>
+                    <i data-lucide="arrow-right"></i>
+                </div>
+            </a>
+
+            <!-- Joaquin -->
+            <a href="individuales/joaquin/filtro.html" class="student-card">
+                <div class="avatar">JO</div>
+                <div class="student-name">Joaquín</div>
+                <div class="role">Estudiante</div>
+                <div class="btn-view">
+                    <span>Ver Laboratorio</span>
+                    <i data-lucide="arrow-right"></i>
+                </div>
+            </a>
+
+            <!-- Victor -->
+            <a href="individuales/victor/filtro.html" class="student-card">
+                <div class="avatar">VI</div>
+                <div class="student-name">Victor</div>
+                <div class="role">Estudiante</div>
+                <div class="btn-view">
+                    <span>Ver Laboratorio</span>
+                    <i data-lucide="arrow-right"></i>
+                </div>
+            </a>
+
+            <!-- Wilder -->
+            <a href="individuales/wilder/filtro.html" class="student-card">
+                <div class="avatar">WI</div>
+                <div class="student-name">Wilder</div>
+                <div class="role">Estudiante</div>
+                <div class="btn-view">
+                    <span>Ver Laboratorio</span>
+                    <i data-lucide="arrow-right"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 Laboratorios Individuales - UMSA</p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

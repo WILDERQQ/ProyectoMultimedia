@@ -1,0 +1,92 @@
+[
+    {
+        "id": "CERT-20260606-31C8",
+        "solicitante_usuario": "estudiante",
+        "solicitante_nombre": "Juan Carlos Pérez Mamani",
+        "nombre_completo": "Juan Carlos Pérez Mamani",
+        "carnet_identidad": "12345678",
+        "expedido_en": "La Paz",
+        "telefono": "1234567",
+        "correo": "jperez@gmail.com",
+        "motivo": "Postulación a trabajo",
+        "estado": "completado",
+        "tiene_proceso": false,
+        "historial": [
+            {
+                "estado": "enviado",
+                "fecha": "2026-06-06 22:26:58",
+                "usuario": "estudiante",
+                "comentario": "Solicitud de certificado enviada."
+            },
+            {
+                "estado": "en_verificacion",
+                "fecha": "2026-06-06 22:27:38",
+                "usuario": "secretaria",
+                "comentario": "Secretaría inició la búsqueda en registros universitarios."
+            },
+            {
+                "estado": "sin_proceso",
+                "fecha": "2026-06-06 22:28:03",
+                "usuario": "secretaria",
+                "comentario": "Verificación completada: NO se encontró proceso activo. Pasa a validación Legal."
+            },
+            {
+                "estado": "en_legal",
+                "fecha": "2026-06-06 22:28:03",
+                "usuario": "secretaria",
+                "comentario": "Enviado al Departamento Legal para validación y firma."
+            },
+            {
+                "estado": "completado",
+                "fecha": "2026-06-06 22:29:28",
+                "usuario": "legal",
+                "comentario": "Certificado validado y firmado. N° CERT-NP-2026-14D56. Disponible para descarga."
+            }
+        ],
+        "certificado_url": "CERTIFICADO N° CERT-NP-2026-14D56: La Universidad Mayor de San Andrés CERTIFICA que el\/la ciudadano\/a Juan Carlos Pérez Mamani, con C.I. 12345678 expedido en La Paz, NO registra proceso universitario activo en esta institución. Firmado digitalmente por Lic. Alberto Mamani Rojas. Fecha: 06\/06\/2026.",
+        "fecha_creacion": "2026-06-06 22:26:58",
+        "fecha_actualizacion": "2026-06-06 22:29:28"
+    },
+    {
+        "id": "CERT-20260606-CB42",
+        "solicitante_usuario": "estudiante",
+        "solicitante_nombre": "Juan Carlos Pérez Mamani",
+        "nombre_completo": "Juan Carlos Pérez Mamani",
+        "carnet_identidad": "12345678",
+        "expedido_en": "El Alto",
+        "telefono": "12345667",
+        "correo": "jperez@gmail.com",
+        "motivo": "Postulacion a beca",
+        "estado": "no_aplica",
+        "tiene_proceso": true,
+        "historial": [
+            {
+                "estado": "enviado",
+                "fecha": "2026-06-06 22:42:29",
+                "usuario": "estudiante",
+                "comentario": "Solicitud de certificado enviada."
+            },
+            {
+                "estado": "en_verificacion",
+                "fecha": "2026-06-06 22:43:08",
+                "usuario": "secretaria",
+                "comentario": "Secretaría inició la búsqueda en registros universitarios."
+            },
+            {
+                "estado": "tiene_proceso",
+                "fecha": "2026-06-06 22:43:29",
+                "usuario": "secretaria",
+                "comentario": "Verificación: SÍ tiene proceso universitario activo. Tiene Proceso Universitario"
+            },
+            {
+                "estado": "no_aplica",
+                "fecha": "2026-06-06 22:43:29",
+                "usuario": "secretaria",
+                "comentario": "No aplica emisión de certificado. Se notifica al solicitante."
+            }
+        ],
+        "certificado_url": "",
+        "fecha_creacion": "2026-06-06 22:42:29",
+        "fecha_actualizacion": "2026-06-06 22:43:29"
+    }
+]

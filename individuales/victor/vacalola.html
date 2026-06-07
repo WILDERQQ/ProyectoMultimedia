@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Animado "La Vaca Lola" - Victor</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 30, 49, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-purple: #a855f7;
+            --accent-cyan: #06b6d4;
+            --accent-gradient: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.1) 0px, transparent 50%);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+        }
+
+        .main-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .sidebar-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: fit-content;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            width: 100%;
+            text-align: left;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            width: 100%;
+        }
+
+        .cow-stage {
+            width: 100%;
+            height: 320px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cow-svg {
+            width: 180px;
+            height: 180px;
+            transition: transform 0.15s ease-out;
+            transform-origin: bottom center;
+        }
+
+        .cow-svg.bounce {
+            transform: scaleY(0.9) scaleX(1.05);
+        }
+
+        .cow-svg.jump {
+            transform: translateY(-20px) scaleY(1.05);
+        }
+
+        .lyrics-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            width: 100%;
+            text-align: center;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lyric-line {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .lyric-line.active {
+            color: #22d3ee;
+            transform: scale(1.05);
+            text-shadow: 0 0 10px rgba(34, 211, 238, 0.3);
+        }
+
+        .player-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-play {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.05rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+            transition: all 0.2s;
+        }
+
+        .btn-play:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-stop {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            padding: 14px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.05rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-stop:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .visualizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 40px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .bar {
+            width: 8px;
+            height: 4px;
+            background: var(--accent-cyan);
+            border-radius: 4px;
+            transition: height 0.1s ease;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="../../vacalola.html" class="back-link">
+            <i data-lucide="arrow-left"></i>
+            Volver al Selector
+        </a>
+        <div style="font-size: 0.85rem; color: var(--accent-purple); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+            Laboratorio de Victor
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Panel Principal: Animación y Controles -->
+        <div class="main-panel">
+            <h1>Cover Sintetizado de "La Vaca Lola"</h1>
+            <p>Melodía generada mediante síntesis aditiva por Web Audio API con animación 2D vectorial sincronizada.</p>
+
+            <div class="cow-stage">
+                <!-- Dibujo de Vaca SVG -->
+                <svg id="cow" class="cow-svg" viewBox="0 0 200 200">
+                    <!-- Cuerpo -->
+                    <ellipse cx="100" cy="120" rx="60" ry="40" fill="#ffffff" stroke="#1e293b" stroke-width="4"/>
+                    <!-- Manchas negras -->
+                    <path d="M 60 95 Q 70 110 85 100 Q 95 90 90 85 Z" fill="#1e293b"/>
+                    <path d="M 120 100 Q 135 110 145 130 Q 125 140 115 120 Z" fill="#1e293b"/>
+                    <path d="M 70 135 Q 90 145 80 155 Q 60 150 70 135 Z" fill="#1e293b"/>
+                    <!-- Patas -->
+                    <rect x="65" y="150" width="12" height="25" rx="4" fill="#ffffff" stroke="#1e293b" stroke-width="4"/>
+                    <rect x="123" y="150" width="12" height="25" rx="4" fill="#ffffff" stroke="#1e293b" stroke-width="4"/>
+                    <rect x="65" y="170" width="12" height="6" fill="#1e293b"/>
+                    <rect x="123" y="170" width="12" height="6" fill="#1e293b"/>
+                    <!-- Ubre -->
+                    <ellipse cx="100" cy="148" rx="15" ry="10" fill="#fda4af" stroke="#e11d48" stroke-width="1.5"/>
+                    <!-- Cola -->
+                    <path d="M 160 120 Q 180 110 175 130" stroke="#1e293b" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <ellipse cx="175" cy="130" rx="5" ry="8" fill="#1e293b"/>
+                    <!-- Cabeza -->
+                    <ellipse cx="100" cy="70" rx="35" ry="28" fill="#ffffff" stroke="#1e293b" stroke-width="4"/>
+                    <!-- Hocico -->
+                    <ellipse cx="100" cy="82" rx="25" ry="14" fill="#fda4af" stroke="#1e293b" stroke-width="3"/>
+                    <circle cx="92" cy="80" r="2.5" fill="#1e293b"/>
+                    <circle cx="108" cy="80" r="2.5" fill="#1e293b"/>
+                    <!-- Ojos -->
+                    <circle cx="88" cy="62" r="5" fill="#1e293b"/>
+                    <circle cx="112" cy="62" r="5" fill="#1e293b"/>
+                    <circle cx="86" cy="60" r="1.5" fill="#ffffff"/>
+                    <circle cx="110" cy="60" r="1.5" fill="#ffffff"/>
+                    <!-- Orejas -->
+                    <path d="M 67 60 Q 50 50 60 70 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+                    <path d="M 133 60 Q 150 50 140 70 Z" fill="#ffffff" stroke="#1e293b" stroke-width="3"/>
+                    <!-- Cuernos -->
+                    <path d="M 85 45 Q 80 30 90 42 Z" fill="#94a3b8" stroke="#1e293b" stroke-width="2"/>
+                    <path d="M 115 45 Q 120 30 110 42 Z" fill="#94a3b8" stroke="#1e293b" stroke-width="2"/>
+                </svg>
+            </div>
+
+            <div class="lyrics-box">
+                <div id="lyric" class="lyric-line">♪ ¡Presiona Play para comenzar el show! ♪</div>
+            </div>
+
+            <div class="player-controls">
+                <button class="btn-play" id="btn-play" onclick="togglePlay()">
+                    <i data-lucide="play" id="play-icon"></i> <span id="play-text">Play Cover</span>
+                </button>
+                <button class="btn-stop" onclick="stopMelody()">
+                    <i data-lucide="square"></i> Detener
+                </button>
+            </div>
+
+            <div class="visualizer">
+                <div class="bar" id="bar0"></div>
+                <div class="bar" id="bar1"></div>
+                <div class="bar" id="bar2"></div>
+                <div class="bar" id="bar3"></div>
+                <div class="bar" id="bar4"></div>
+                <div class="bar" id="bar5"></div>
+                <div class="bar" id="bar6"></div>
+                <div class="bar" id="bar7"></div>
+            </div>
+        </div>
+
+        <!-- Panel Lateral: Detalles Técnicos -->
+        <div class="sidebar-panel">
+            <h2>Detalles de Síntesis</h2>
+            <p>Este cover se sintetiza mediante osciladores nativos con envolventes de volumen de ataque y decaimiento rápido.</p>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; font-size: 0.85rem; line-height: 1.5; display:flex; flex-direction:column; gap: 10px;">
+                <div>
+                    <strong style="color: var(--accent-cyan); display:block; margin-bottom:2px;">Melodía:</strong>
+                    Escala de Do Mayor (C4 - D4 - E4 - G4) secuenciada por eventos de tiempo.
+                </div>
+                <div>
+                    <strong style="color: var(--accent-cyan); display:block; margin-bottom:2px;">Tipo de Onda:</strong>
+                    Triangular (suave, tipo flauta) combinada con una onda senoidal sub-bass.
+                </div>
+                <div>
+                    <strong style="color: var(--accent-cyan); display:block; margin-bottom:2px;">Sincronización:</strong>
+                    Los botes del SVG de la vaca ocurren con los flancos de ataque del sonido de las notas.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 Laboratorio Multimedia - Victor</p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Configuración de audio
+        let audioCtx = null;
+        let isPlaying = false;
+        let sequencerTimeout = null;
+        let animationInterval = null;
+
+        // Notas (Frecuencias en Hz)
+        const C4 = 261.63;
+        const D4 = 293.66;
+        const E4 = 329.63;
+        const G4 = 392.00;
+        const REST = 0;
+
+        // Partitura: [Frecuencia, Duración en segundos, Texto lírica]
+        const song = [
+            [G4, 0.4, "La"],
+            [G4, 0.4, "va-"],
+            [E4, 0.4, "ca"],
+            [G4, 0.4, "Lo-"],
+            [E4, 0.4, "la,"],
+            [REST, 0.2, ""],
+            [G4, 0.4, "La"],
+            [G4, 0.4, "va-"],
+            [E4, 0.4, "ca"],
+            [G4, 0.4, "Lo-"],
+            [E4, 0.4, "la,"],
+            [REST, 0.3, ""],
+            
+            [G4, 0.4, "Tie-"],
+            [G4, 0.4, "ne"],
+            [E4, 0.4, "ca-"],
+            [G4, 0.4, "be-"],
+            [E4, 0.4, "za"],
+            [REST, 0.1, ""],
+            [G4, 0.4, "y"],
+            [G4, 0.4, "tie-"],
+            [E4, 0.4, "ne"],
+            [G4, 0.4, "co-"],
+            [E4, 0.4, "la,"],
+            [REST, 0.3, ""],
+            
+            [G4, 0.4, "Y a-"],
+            [G4, 0.4, "ce"],
+            [D4, 0.4, "muuu-"],
+            [REST, 0.1, ""],
+            [D4, 0.8, "uuuuu!"],
+            [REST, 0.5, ""]
+        ];
+
+        let songIndex = 0;
+        const cow = document.getElementById('cow');
+
+        function togglePlay() {
+            if (isPlaying) {
+                stopMelody();
+            } else {
+                startMelody();
+            }
+        }
+
+        function startMelody() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            isPlaying = true;
+            songIndex = 0;
+            document.getElementById('play-icon').setAttribute('data-lucide', 'pause');
+            document.getElementById('play-text').textContent = 'Pausar';
+            document.getElementById('lyric').classList.add('active');
+            lucide.createIcons();
+            
+            playNextNote();
+            startVisualizerEffect();
+        }
+
+        function playNextNote() {
+            if (!isPlaying) return;
+
+            if (songIndex >= song.length) {
+                songIndex = 0; // Bucle
+            }
+
+            const [freq, duration, text] = song[songIndex];
+
+            if (text !== "") {
+                document.getElementById('lyric').textContent = text;
+            }
+
+            if (freq !== REST) {
+                // Sintetizar nota
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                // Envolvente de volumen (ataque y decaimiento rápido)
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration - 0.05);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+
+                // Animar vaca
+                cow.classList.remove('bounce', 'jump');
+                void cow.offsetWidth; // Forzar reflow
+                if (songIndex % 2 === 0) {
+                    cow.classList.add('bounce');
+                } else {
+                    cow.classList.add('jump');
+                }
+            }
+
+            songIndex++;
+            sequencerTimeout = setTimeout(playNextNote, duration * 1000);
+        }
+
+        function stopMelody() {
+            isPlaying = false;
+            clearTimeout(sequencerTimeout);
+            clearInterval(animationInterval);
+            
+            document.getElementById('play-icon').setAttribute('data-lucide', 'play');
+            document.getElementById('play-text').textContent = 'Play Cover';
+            document.getElementById('lyric').textContent = '♪ ¡Presiona Play para comenzar el show! ♪';
+            document.getElementById('lyric').classList.remove('active');
+            lucide.createIcons();
+
+            cow.classList.remove('bounce', 'jump');
+            resetVisualizerBars();
+        }
+
+        function startVisualizerEffect() {
+            clearInterval(animationInterval);
+            animationInterval = setInterval(() => {
+                if (!isPlaying) return;
+                for (let i = 0; i < 8; i++) {
+                    const h = Math.random() * 36 + 4;
+                    document.getElementById('bar' + i).style.height = h + 'px';
+                }
+            }, 100);
+        }
+
+        function resetVisualizerBars() {
+            for (let i = 0; i < 8; i++) {
+                document.getElementById('bar' + i).style.height = '4px';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+[
+    {
+        "id": "TIT-20260607-F32D",
+        "estudiante_usuario": "estudiante",
+        "estudiante_nombre": "Juan Carlos Pérez Mamani",
+        "carnet": "12345678",
+        "carrera": "Informática",
+        "facultad": "Ciencias Puras y Naturales",
+        "fecha_egreso": "2027-01-01",
+        "promedio": "80",
+        "modalidad": "Tesis",
+        "titulo_proyecto": "Agente IA",
+        "tutor": "Lic. Tarquino",
+        "documentos": [
+            "diploma_bachiller",
+            "certificado_notas",
+            "libreta_universitaria",
+            "carnet_identidad",
+            "foto_carnet",
+            "deposito_bancario"
+        ],
+        "estado": "observado",
+        "historial": [
+            {
+                "estado": "enviado",
+                "fecha": "2026-06-07 03:25:17",
+                "usuario": "estudiante",
+                "comentario": "Solicitud enviada por el estudiante."
+            },
+            {
+                "estado": "en_revision",
+                "fecha": "2026-06-06 22:07:55",
+                "usuario": "secretaria",
+                "comentario": "Secretaría inició la revisión de la solicitud."
+            },
+            {
+                "estado": "observado",
+                "fecha": "2026-06-06 22:09:01",
+                "usuario": "secretaria",
+                "comentario": "Observaciones: No se ve bien las fotografias del estudiante"
+            }
+        ],
+        "observaciones": "No se ve bien las fotografias del estudiante",
+        "resolucion": "",
+        "fecha_creacion": "2026-06-07 03:25:17",
+        "fecha_actualizacion": "2026-06-06 22:09:01"
+    },
+    {
+        "id": "TIT-20260606-689F",
+        "estudiante_usuario": "estudiante",
+        "estudiante_nombre": "Juan Carlos Pérez Mamani",
+        "carnet": "12345678",
+        "carrera": "Informática",
+        "facultad": "Ciencias Puras y Naturales",
+        "fecha_egreso": "2026-08-08",
+        "promedio": "61",
+        "modalidad": "Proyecto de Grado",
+        "titulo_proyecto": "Sistema de Ventas",
+        "tutor": "Lic. Huanca",
+        "documentos": [
+            "diploma_bachiller",
+            "certificado_notas",
+            "libreta_universitaria",
+            "carnet_identidad",
+            "foto_carnet",
+            "deposito_bancario"
+        ],
+        "estado": "rechazado",
+        "historial": [
+            {
+                "estado": "enviado",
+                "fecha": "2026-06-06 21:46:45",
+                "usuario": "estudiante",
+                "comentario": "Solicitud enviada por el estudiante."
+            },
+            {
+                "estado": "en_revision",
+                "fecha": "2026-06-06 21:48:16",
+                "usuario": "secretaria",
+                "comentario": "Secretaría inició la revisión de la solicitud."
+            },
+            {
+                "estado": "verificado",
+                "fecha": "2026-06-06 21:49:10",
+                "usuario": "secretaria",
+                "comentario": "Documentación verificada. Se envía a Decanatura."
+            },
+            {
+                "estado": "en_decanatura",
+                "fecha": "2026-06-06 21:51:15",
+                "usuario": "secretaria",
+                "comentario": "Expediente enviado a Decanatura para aprobación."
+            },
+            {
+                "estado": "rechazado",
+                "fecha": "2026-06-06 22:13:13",
+                "usuario": "decano",
+                "comentario": "Rechazado por Decanatura. Tiene procesos universitarios"
+            }
+        ],
+        "observaciones": "Tiene procesos universitarios",
+        "resolucion": "",
+        "fecha_creacion": "2026-06-06 21:46:45",
+        "fecha_actualizacion": "2026-06-06 22:13:13"
+    },
+    {
+        "id": "TIT-20260606-7897",
+        "estudiante_usuario": "estudiante",
+        "estudiante_nombre": "Juan Carlos Pérez Mamani",
+        "carnet": "12345678",
+        "carrera": "Derecho",
+        "facultad": "Ciencias Politicas",
+        "fecha_egreso": "2026-06-13",
+        "promedio": "56",
+        "modalidad": "Excelencia Académica",
+        "titulo_proyecto": "",
+        "tutor": "",
+        "documentos": [
+            "diploma_bachiller",
+            "certificado_notas",
+            "libreta_universitaria",
+            "carnet_identidad",
+            "foto_carnet",
+            "deposito_bancario"
+        ],
+        "estado": "completado",
+        "historial": [
+            {
+                "estado": "enviado",
+                "fecha": "2026-06-06 22:00:13",
+                "usuario": "estudiante",
+                "comentario": "Solicitud enviada por el estudiante."
+            },
+            {
+                "estado": "en_revision",
+                "fecha": "2026-06-06 22:01:30",
+                "usuario": "secretaria",
+                "comentario": "Secretaría inició la revisión de la solicitud."
+            },
+            {
+                "estado": "verificado",
+                "fecha": "2026-06-06 22:01:45",
+                "usuario": "secretaria",
+                "comentario": "Documentación verificada. Se envía a Decanatura."
+            },
+            {
+                "estado": "en_decanatura",
+                "fecha": "2026-06-06 22:03:42",
+                "usuario": "secretaria",
+                "comentario": "Expediente enviado a Decanatura para aprobación."
+            },
+            {
+                "estado": "aprobado",
+                "fecha": "2026-06-06 22:04:09",
+                "usuario": "decano",
+                "comentario": "Aprobado por Decanatura. "
+            },
+            {
+                "estado": "en_registros",
+                "fecha": "2026-06-06 22:04:09",
+                "usuario": "decano",
+                "comentario": "Enviado a Registros para generación de resolución."
+            },
+            {
+                "estado": "completado",
+                "fecha": "2026-06-06 22:05:27",
+                "usuario": "registros",
+                "comentario": "Resolución emitida. N° RES-2026-0909C. Título profesional generado."
+            }
+        ],
+        "observaciones": "",
+        "resolucion": "Resolución N° RES-2026-0909C: Se OTORGA el Título Profesional a Juan Carlos Pérez Mamani de la carrera de Derecho con promedio 56. Modalidad: Excelencia Académica. Fecha: 06\/06\/2026.",
+        "fecha_creacion": "2026-06-06 22:00:13",
+        "fecha_actualizacion": "2026-06-06 22:05:27"
+    }
+]

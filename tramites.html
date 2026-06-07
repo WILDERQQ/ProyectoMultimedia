@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelado BPM & Trámites UMSA</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 30, 49, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.1) 0px, transparent 50%);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+        }
+
+        .info-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: fit-content;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .features-list {
+            margin-bottom: 25px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .feature-item i {
+            color: var(--accent-cyan);
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        .btn-launch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--accent-gradient);
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-launch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .viewer-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 25px;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 12px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        .diagram-container {
+            flex-grow: 1;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+            position: relative;
+            padding: 20px;
+        }
+
+        .diagram-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            filter: invert(0.9) hue-rotate(180deg); /* Convertir diagramas claros en oscuros para combinar */
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            background: rgba(15, 15, 25, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 6px 12px;
+            backdrop-filter: blur(8px);
+        }
+
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .ctrl-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="back-link">
+            <i data-lucide="arrow-left"></i>
+            Volver al Panel Principal
+        </a>
+        <div style="font-size: 0.85rem; color: var(--accent-cyan); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+            Actividad Grupal A
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Panel Izquierdo: Información y Botón de Inicio -->
+        <div class="info-panel">
+            <div>
+                <h1>Digitalización de Trámites UMSA</h1>
+                <p>Plataforma BPM modular para modelar, gestionar y validar solicitudes académicas y administrativas dentro de la universidad.</p>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <i data-lucide="check-circle2"></i>
+                        <span>Modelado en notación BPMN 2.0 estándar.</span>
+                    </div>
+                    <div class="feature-item">
+                        <i data-lucide="check-circle2"></i>
+                        <span>Gestión de flujo de trabajo modular (Certificados y Título Profesional).</span>
+                    </div>
+                    <div class="feature-item">
+                        <i data-lucide="check-circle2"></i>
+                        <span>Base de datos en formato plano utilizando archivos JSON integrados.</span>
+                    </div>
+                    <div class="feature-item">
+                        <i data-lucide="check-circle2"></i>
+                        <span>Seguimiento de trámites en tiempo real por el estudiante.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <p style="font-size: 0.8rem; margin-bottom: 10px; color: var(--accent-purple);">
+                    Nota: Asegúrate de tener corriendo el servidor con `node server.js` para acceder a la aplicación PHP.
+                </p>
+                <a href="http://localhost:8000" target="_blank" class="btn-launch">
+                    <span>Iniciar Aplicación PHP</span>
+                    <i data-lucide="external-link"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Panel Derecho: Visor de Diagramas BPMN -->
+        <div class="viewer-panel">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem;">Visualizador de Modelos BPMN</h2>
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchDiagram('certificado')">Certificado de No Procesos</button>
+                    <button class="tab-btn" onclick="switchDiagram('titulo')">Trámite de Título Profesional</button>
+                </div>
+            </div>
+
+            <p style="margin: 0; font-size: 0.85rem;">Vista previa interactiva de los diagramas de secuencia del proceso modelado en Bizagi / Camunda.</p>
+
+            <div class="diagram-container">
+                <img id="diagram" class="diagram-img" src="grupal/A-DigitalizacionTramitesUMSA/a-Modelado_de_Proceso/Diagrama-CertificadoNoProceso.svg" alt="Diagrama Certificado No Proceso">
+                
+                <div class="controls">
+                    <button class="ctrl-btn" onclick="zoomIn()" title="Acercar"><i data-lucide="zoom-in"></i></button>
+                    <button class="ctrl-btn" onclick="zoomOut()" title="Alejar"><i data-lucide="zoom-out"></i></button>
+                    <button class="ctrl-btn" onclick="resetZoom()" title="Restaurar"><i data-lucide="maximize-2"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 Plataforma UMSA BPM • Desarrollado con PHP 8 & JSON</p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        let zoomLevel = 1;
+        const diagramEl = document.getElementById('diagram');
+
+        const diagrams = {
+            certificado: 'grupal/A-DigitalizacionTramitesUMSA/a-Modelado_de_Proceso/Diagrama-CertificadoNoProceso.svg',
+            titulo: 'grupal/A-DigitalizacionTramitesUMSA/a-Modelado_de_Proceso/Diagrama-TituloProfesional.svg'
+        };
+
+        function switchDiagram(type) {
+            // Cambiar la imagen
+            diagramEl.src = diagrams[type];
+            diagramEl.alt = 'Diagrama ' + type;
+            
+            // Actualizar botones
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            if (type === 'certificado') {
+                buttons[0].classList.add('active');
+            } else {
+                buttons[1].classList.add('active');
+            }
+            
+            resetZoom();
+        }
+
+        function zoomIn() {
+            zoomLevel += 0.15;
+            applyZoom();
+        }
+
+        function zoomOut() {
+            if (zoomLevel > 0.4) {
+                zoomLevel -= 0.15;
+                applyZoom();
+            }
+        }
+
+        function resetZoom() {
+            zoomLevel = 1;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            diagramEl.style.transform = `scale(${zoomLevel})`;
+        }
+    </script>
+</body>
+</html>

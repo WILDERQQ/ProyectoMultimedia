@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Técnico - Proyecto Multimedia</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 30, 49, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.1) 0px, transparent 50%);
+        }
+
+        nav {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        .report-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 40px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 15px;
+        }
+
+        .meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 30px 0 15px;
+            color: var(--text-primary);
+            border-left: 4px solid var(--accent-purple);
+            padding-left: 12px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .team-member {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .team-member h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .team-member p {
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            margin: 0;
+        }
+
+        .tech-list {
+            margin-bottom: 20px;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.1);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="back-link">
+            <i data-lucide="arrow-left"></i>
+            Volver al Panel Principal
+        </a>
+    </nav>
+
+    <div class="container">
+        <div class="report-card">
+            <h1>Informe Técnico Breve</h1>
+            <p style="font-size: 1.1rem; color: var(--text-primary); font-weight: 300; margin-bottom: 10px;">Proyecto Grupal e Individual de Multimedia</p>
+            
+            <div class="meta">
+                <span><i data-lucide="users" style="width:16px;height:16px;"></i> UMSA - Informática</span>
+                <span><i data-lucide="book-open" style="width:16px;height:16px;"></i> Multimedia</span>
+                <span><i data-lucide="calendar" style="width:16px;height:16px;"></i> Junio 2026</span>
+            </div>
+
+            <h2>1. Integrantes del Equipo</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <h3>Jeremy</h3>
+                    <p>Desarrollador</p>
+                </div>
+                <div class="team-member">
+                    <h3>Joaquín</h3>
+                    <p>Desarrollador</p>
+                </div>
+                <div class="team-member">
+                    <h3>Victor</h3>
+                    <p>Desarrollador</p>
+                </div>
+                <div class="team-member">
+                    <h3>Wilder</h3>
+                    <p>Desarrollador</p>
+                </div>
+            </div>
+
+            <h2>2. Objetivos del Proyecto</h2>
+            <p>
+                Este proyecto engloba la investigación e implementación de tecnologías interactivas multimedia aplicadas en entornos web y simulaciones 3D. A nivel grupal, aborda la digitalización y modelado de procesos universitarios reales (BPM/BPMN) y el desarrollo de simuladores gráficos en 3D interactivos con motores como Three.js y Unity WebGL. A nivel individual, explora algoritmos fundamentales de tratamiento de imágenes (filtros convolucionales en Canvas) y reproducción síncrona multimedia.
+            </p>
+
+            <h2>3. Tecnologías Empleadas</h2>
+            <div class="tech-list">
+                <span class="tech-tag">HTML5 Canvas API</span>
+                <span class="tech-tag">Vanilla Javascript</span>
+                <span class="tech-tag">Three.js (WebGL)</span>
+                <span class="tech-tag">Unity 3D & WebGL</span>
+                <span class="tech-tag">PHP 8</span>
+                <span class="tech-tag">JSON Flat DB</span>
+                <span class="tech-tag">BPMN 2.0 (Bizagi)</span>
+                <span class="tech-tag">Node.js</span>
+            </div>
+
+            <h2>4. Estructura Grupal</h2>
+            <p><strong>A. Trámites UMSA (BPM)</strong>: Modelado completo de flujos de solicitud de Certificados y Títulos Académicos, con un back-end PHP integrado que gestiona solicitudes en tiempo real y almacena la información directamente en archivos planos JSON.</p>
+            <p><strong>B1. Animación Sincronizada (Unity)</strong>: Implementación de avatares animados sincronizados con pistas de audio en un entorno interactivo compilado en WebGL de alto rendimiento.</p>
+            <p><strong>B2. Visor 3D (Fotogrametría)</strong>: Renderizado web 3D optimizado con control de órbita y sombreado ACES Filmic que carga directamente modelos fotogramétricos en formato GLB comprimido.</p>
+
+            <h2>5. Laboratorios Individuales</h2>
+            <p>Cada miembro cuenta con una estructura dedicada en <code>/individuales/[estudiante]</code> donde se alojan tres módulos independientes: clasificación de texturas mediante lectura de píxeles, filtros gaussianos 3x3 de suavizado para reducción de ruido gráfico, y animaciones síncronas del clásico infantil "La Vaca Lola" mediante audio interactivo y canvas dinámicos.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 Proyecto Multimedia UMSA • Todos los derechos reservados</p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

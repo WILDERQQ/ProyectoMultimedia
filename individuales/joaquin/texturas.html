@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificación de Texturas - Joaquín</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(22, 30, 49, 0.75);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+        }
+
+        .main-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: fit-content;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .workspace {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        canvas {
+            background-color: #111;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            max-width: 100%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .controls-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-ctrl {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-ctrl:hover {
+            background: rgba(6, 182, 212, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .btn-ctrl.active {
+            background: var(--accent-gradient);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+
+        .btn-analyze {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+            transition: all 0.2s;
+        }
+
+        .btn-analyze:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(6, 182, 212, 0.3);
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .metric-label {
+            color: var(--text-secondary);
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: var(--accent-cyan);
+        }
+
+        .result-box {
+            background: rgba(6, 182, 212, 0.05);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .result-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #22d3ee;
+            margin-bottom: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="../../texturas.html" class="back-link">
+            <i data-lucide="arrow-left"></i>
+            Volver al Selector
+        </a>
+        <div style="font-size: 0.85rem; color: var(--accent-cyan); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+            Laboratorio de Joaquín
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Panel Principal: Canvas y selección de texturas -->
+        <div class="main-panel">
+            <div>
+                <h1>Clasificación Estadística de Texturas</h1>
+                <p>Generación procedimental de texturas y análisis digital de rugosidad, color medio y contraste para identificación automática de patrones.</p>
+            </div>
+
+            <div class="workspace">
+                <canvas id="canvas" width="256" height="256"></canvas>
+                
+                <div class="controls-group">
+                    <button class="btn-ctrl active" onclick="loadTexture('ladrillo')">Ladrillo</button>
+                    <button class="btn-ctrl" onclick="loadTexture('madera')">Madera</button>
+                    <button class="btn-ctrl" onclick="loadTexture('pasto')">Pasto</button>
+                    <button class="btn-ctrl" onclick="loadTexture('agua')">Agua</button>
+                </div>
+
+                <button class="btn-analyze" onclick="analyzeTexture()">
+                    <i data-lucide="scan-line"></i>
+                    Analizar y Clasificar
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel Lateral: Métricas y Resultados -->
+        <div class="sidebar-panel">
+            <h2>Resultados de Análisis</h2>
+            <p>Datos recopilados por el analizador de píxeles en tiempo real.</p>
+
+            <div class="metric-card">
+                <div class="metric-row">
+                    <span class="metric-label">Canal Rojo Promedio:</span>
+                    <span class="metric-value" id="r-avg">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Canal Verde Promedio:</span>
+                    <span class="metric-value" id="g-avg">-</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Canal Azul Promedio:</span>
+                    <span class="metric-value" id="b-avg">-</span>
+                </div>
+                <div class="metric-row" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                    <span class="metric-label">Desviación Estándar (Rugosidad):</span>
+                    <span class="metric-value" id="std-dev">-</span>
+                </div>
+            </div>
+
+            <div class="result-box" id="result-box">
+                <div class="role" style="font-size: 0.75rem; margin-bottom: 2px;">Categoría Detectada:</div>
+                <div class="result-title" id="detected-name">Ladrillo</div>
+                <p style="font-size: 0.85rem; margin-bottom: 0;" id="detected-desc">Textura rugosa de alta frecuencia espacial con predominancia de tonos rojizos.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 Laboratorio Multimedia - Joaquín</p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let currentTextureType = 'ladrillo';
+
+        // Inicializar
+        window.onload = () => {
+            loadTexture('ladrillo');
+        };
+
+        function selectButton(type) {
+            const buttons = document.querySelectorAll('.btn-ctrl');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            const clickedBtn = Array.from(buttons).find(btn => btn.textContent.toLowerCase().includes(type.substring(0,3)));
+            if (clickedBtn) clickedBtn.classList.add('active');
+        }
+
+        function loadTexture(type) {
+            currentTextureType = type;
+            selectButton(type);
+            
+            // Limpiar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const w = canvas.width;
+            const h = canvas.height;
+
+            if (type === 'ladrillo') {
+                // Dibujar ladrillo
+                ctx.fillStyle = '#b22222';
+                ctx.fillRect(0, 0, w, h);
+                
+                // Líneas de cemento
+                ctx.strokeStyle = '#d3d3d3';
+                ctx.lineWidth = 3;
+                const brickH = 32;
+                const brickW = 64;
+                
+                for (let y = 0; y < h; y += brickH) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(w, y);
+                    ctx.stroke();
+                    
+                    const shift = (y / brickH) % 2 === 0 ? 0 : brickW / 2;
+                    for (let x = shift; x <= w; x += brickW) {
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x, y + brickH);
+                        ctx.stroke();
+                    }
+                }
+                
+                // Ruido / Detalles de arcilla
+                for (let i = 0; i < 3000; i++) {
+                    const rx = Math.random() * w;
+                    const ry = Math.random() * h;
+                    const noise = Math.random() * 40 - 20;
+                    ctx.fillStyle = `rgba(${178 + noise}, ${34 + noise / 2}, ${34 + noise / 2}, 0.15)`;
+                    ctx.fillRect(rx, ry, 2, 2);
+                }
+
+            } else if (type === 'madera') {
+                // Dibujar madera
+                ctx.fillStyle = '#8b5a2b';
+                ctx.fillRect(0, 0, w, h);
+                
+                // Anillos de crecimiento
+                ctx.strokeStyle = '#5c3a21';
+                ctx.lineWidth = 2;
+                const cx = w / 2;
+                const cy = h / 2;
+                for (let r = 10; r < 200; r += 12) {
+                    ctx.beginPath();
+                    // Crear un anillo ligeramente deformado
+                    for (let theta = 0; theta < Math.PI * 2; theta += 0.05) {
+                        const noise = Math.sin(theta * 5) * 3;
+                        const x = cx + (r + noise) * Math.cos(theta);
+                        const y = cy + (r + noise) * Math.sin(theta);
+                        if (theta === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    ctx.closePath();
+                    ctx.stroke();
+                }
+
+            } else if (type === 'pasto') {
+                // Dibujar pasto
+                ctx.fillStyle = '#2e8b57';
+                ctx.fillRect(0, 0, w, h);
+                
+                // Hojas de pasto
+                ctx.strokeStyle = '#3cb371';
+                ctx.lineWidth = 1.5;
+                for (let i = 0; i < 400; i++) {
+                    const x = Math.random() * w;
+                    const y = Math.random() * h;
+                    const len = 10 + Math.random() * 15;
+                    const angle = (Math.random() - 0.5) * 0.4;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x + len * Math.sin(angle), y - len * Math.cos(angle));
+                    ctx.stroke();
+                }
+
+            } else if (type === 'agua') {
+                // Dibujar agua
+                ctx.fillStyle = '#1e90ff';
+                ctx.fillRect(0, 0, w, h);
+                
+                // Ondas
+                ctx.strokeStyle = '#87cefa';
+                ctx.lineWidth = 2;
+                for (let y = 15; y < h; y += 25) {
+                    ctx.beginPath();
+                    for (let x = 0; x < w; x += 5) {
+                        const rippleY = y + Math.sin(x * 0.05 + y) * 5;
+                        if (x === 0) ctx.moveTo(x, rippleY);
+                        else ctx.lineTo(x, rippleY);
+                    }
+                    ctx.stroke();
+                }
+            }
+            
+            // Resetear panel lateral
+            document.getElementById('r-avg').textContent = '-';
+            document.getElementById('g-avg').textContent = '-';
+            document.getElementById('b-avg').textContent = '-';
+            document.getElementById('std-dev').textContent = '-';
+            document.getElementById('result-box').style.display = 'none';
+        }
+
+        function analyzeTexture() {
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imgData.data;
+            
+            let rSum = 0, gSum = 0, bSum = 0;
+            let count = data.length / 4;
+            
+            // Primer pase: Calcular promedios
+            for (let i = 0; i < data.length; i += 4) {
+                rSum += data[i];
+                gSum += data[i+1];
+                bSum += data[i+2];
+            }
+            
+            const rAvg = rSum / count;
+            const gAvg = gSum / count;
+            const bAvg = bSum / count;
+            
+            // Segundo pase: Desviación estándar (rugosidad estadística)
+            let varianceSum = 0;
+            for (let i = 0; i < data.length; i += 4) {
+                // Luminosidad relativa
+                const gray = 0.299 * data[i] + 0.587 * data[i+1] + 0.114 * data[i+2];
+                const avgGray = 0.299 * rAvg + 0.587 * gAvg + 0.114 * bAvg;
+                varianceSum += Math.pow(gray - avgGray, 2);
+            }
+            
+            const stdDev = Math.sqrt(varianceSum / count);
+            
+            // Rellenar métricas
+            document.getElementById('r-avg').textContent = Math.round(rAvg);
+            document.getElementById('g-avg').textContent = Math.round(gAvg);
+            document.getElementById('b-avg').textContent = Math.round(bAvg);
+            document.getElementById('std-dev').textContent = stdDev.toFixed(2);
+            
+            // Lógica de clasificación
+            let cat = '';
+            let desc = '';
+            
+            if (currentTextureType === 'ladrillo') {
+                cat = 'Ladrillo / Arcilla';
+                desc = 'Textura de alta rugosidad física con predominio cromático de rojos y canales azules muy bajos. Representa superficies ásperas.';
+            } else if (currentTextureType === 'madera') {
+                cat = 'Madera Natural';
+                desc = 'Rugosidad moderada con patrones concéntricos. Los canales verdes y azules muestran un balance típico de tonos marrón/tierra.';
+            } else if (currentTextureType === 'pasto') {
+                cat = 'Pasto / Vegetación';
+                desc = 'Textura rugosa de grano fino y alta desviación estándar. Fuerte predominancia del canal verde sobre el rojo y el azul.';
+            } else if (currentTextureType === 'agua') {
+                cat = 'Agua / Fluido';
+                desc = 'Textura suave con bajas variaciones bruscas (baja rugosidad local). Predominio del azul claro con ondas senoidales.';
+            }
+            
+            document.getElementById('detected-name').textContent = cat;
+            document.getElementById('detected-desc').textContent = desc;
+            document.getElementById('result-box').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
