@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio Multimedia - Víctor Manuel Quito Chávez</title>
+    
+    <!-- SEO Optimization -->
+    <meta name="description" content="Portafolio interactivo de Víctor Manuel Quito Chávez que muestra aplicaciones multimedia y procesamiento de imágenes en Python (Tkinter, OpenCV y Pillow) ejecutadas directamente en la web.">
+    <meta name="author" content="Víctor Manuel Quito Chávez">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <!-- Prism.js Tomorrow Theme for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+</head>
+<body>
+
+    <!-- Header containing Student Name -->
+    <header>
+        <div class="header-container">
+            <div class="header-logo">
+                <h1>PROYECTOS MULTIMEDIA</h1>
+                <p>Procesamiento Digital & Visión Artificial</p>
+            </div>
+            <div class="header-info">
+                <div class="student-name">Víctor Manuel Quito Chávez</div>
+                <div class="student-tag">Estudiante / Desarrollador</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace Layout -->
+    <main>
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <h3 class="sidebar-title">Ejercicios</h3>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-project="texturas" id="nav-texturas">
+                    <span class="nav-item-title">a) Clasificación de Texturas</span>
+                    <span class="nav-item-desc">Segmentación de superficies (Césped, Tierra, Asfalto) mediante umbrales en HSV.</span>
+                </a>
+                <a href="#" class="nav-item" data-project="suavizado" id="nav-suavizado">
+                    <span class="nav-item-title">b) Filtro de Suavizado</span>
+                    <span class="nav-item-desc">Aplicación de Filtro Gaussiano 3x3 para reducción de ruido en imágenes.</span>
+                </a>
+                <a href="#" class="nav-item" data-project="vacalola" id="nav-vacalola">
+                    <span class="nav-item-title">c) Cover "La Vaca Lola"</span>
+                    <span class="nav-item-desc">Reproductor multimedia interactivo con controles de reproducción de video.</span>
+                </a>
+                <a href="#" class="nav-item" data-project="documentacion" id="nav-documentacion">
+                    <span class="nav-item-title">📄 Documentación</span>
+                    <span class="nav-item-desc">Informe técnico final y manual de usuario (PDF).</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Display Panel -->
+        <section class="content-area">
+            <!-- Content Header -->
+            <div class="content-area-header">
+                <h2 id="project-title">Clasificación de Texturas</h2>
+                <button class="btn-download-top" onclick="downloadCurrentScript()" id="btn-download-top-action">
+                    📥 Descargar Archivo
+                </button>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="code" id="tab-btn-code">💻 Código Fuente</button>
+                <button class="tab-btn" data-tab="setup" id="tab-btn-setup">🔧 Pasos de Instalación</button>
+                <button class="tab-btn" data-tab="execute" id="tab-btn-execute">🚀 Ver ejecución en web -</button>
+            </div>
+
+            <!-- Tab Content: Source Code -->
+            <div class="tab-content active" id="code-tab">
+                <div class="code-wrapper">
+                    <pre><code id="code-display" class="language-python"></code></pre>
+                </div>
+            </div>
+
+            <!-- Tab Content: Setup Guide -->
+            <div class="tab-content" id="setup-tab">
+                <div class="setup-guide-box">
+                    <div class="setup-step">
+                        <h4><span class="step-num">1</span> Descargar el Script</h4>
+                        <p>Descarga el archivo fuente haciendo clic en el botón superior derecho.</p>
+                        <button class="btn-primary" onclick="downloadCurrentScript()">📥 Descargar archivo</button>
+                    </div>
+
+                    <div class="setup-step" id="setup-step-deps">
+                        <h4><span class="step-num">2</span> Instalar las Dependencias</h4>
+                        <p>Abre tu terminal (PowerShell, Command Prompt o Bash) e instala las librerías necesarias ejecutando el siguiente comando:</p>
+                        <div class="terminal-box">
+                            <span class="terminal-text" id="cmd-install">pip install opencv-python numpy Pillow</span>
+                            <button class="btn-copy" onclick="navigator.clipboard.writeText('pip install opencv-python numpy Pillow')">Copiar</button>
+                        </div>
+                    </div>
+
+                    <div class="setup-step" id="setup-step-run">
+                        <h4><span class="step-num">3</span> Ejecutar el Programa</h4>
+                        <p>Para lanzar la interfaz de escritorio en Tkinter, ejecuta el comando desde la carpeta donde se descargó el script:</p>
+                        <div class="terminal-box">
+                            <span class="terminal-text" id="cmd-run">python clasificacionTexturas.py</span>
+                            <button class="btn-copy" onclick="navigator.clipboard.writeText(document.getElementById('cmd-run').innerText)">Copiar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Web Demonstration (Native Web Container) -->
+            <div class="tab-content" id="execute-tab" style="padding: 0;">
+                <div id="web-demo-container" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                    <!-- iframes or videos will be injected here via js -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 - Universidad / Portafolio Individual de Multimedia. Creado por <strong>Víctor Manuel Quito Chávez</strong>.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
