@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://ddrvmyf2bpqut"]
+
+[ext_resource type="Texture2D" uid="uid://i68wp15dtfn1" path="res://sprites/fondos/fondo.png" id="1_1kc1q"]
+[ext_resource type="PackedScene" uid="uid://c7fahgaqvouc" path="res://scenes/Vaca.tscn" id="1_4msxo"]
+[ext_resource type="Script" uid="uid://cs8chu82bpea" path="res://scenes/scene.gd" id="1_5fb3c"]
+[ext_resource type="AudioStream" uid="uid://ct5rsaakrd1qr" path="res://audio/VacaLola.mp3" id="2_4msxo"]
+
+[node name="Scene" type="Node2D" unique_id=789334698]
+script = ExtResource("1_5fb3c")
+
+[node name="Vaca" parent="." unique_id=796398580 instance=ExtResource("1_4msxo")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=321634288]
+
+[node name="Timer" type="Timer" parent="." unique_id=1525800410]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1400402460]
+stream = ExtResource("2_4msxo")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1665825566]
+offset_left = -575.0
+offset_top = -321.0
+offset_right = 578.83325
+offset_bottom = 327.0
+texture = ExtResource("1_1kc1q")
+expand_mode = 2

@@ -3,257 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trabajos Individuales - Joaquín</title>
-    <!-- Google Fonts -->
+    <title>Portafolio Multimedia - Joaquin Nicolas Paco Alanoca</title>
+
+    <!-- SEO Optimization -->
+    <meta name="description" content="Portafolio interactivo de Joaquin Nicolas Paco Alanoca que muestra aplicaciones multimedia y procesamiento de imágenes en Python (PyScript, OpenCV y NumPy) ejecutadas directamente en la web.">
+    <meta name="author" content="Joaquin Nicolas Paco Alanoca">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(22, 30, 49, 0.75);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-cyan: #06b6d4;
-            --accent-blue: #3b82f6;
-            --accent-purple: #a855f7;
-            --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-        }
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/styles.css">
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
-        }
+    <!-- Prism.js Tomorrow Theme for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
 
-        nav {
-            max-width: 800px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
-
-        .back-link:hover {
-            color: var(--text-primary);
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            width: 100%;
-            flex-grow: 1;
-        }
-
-        .header-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .description {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        .labs-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .lab-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 24px;
-            backdrop-filter: blur(12px);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            color: var(--text-primary);
-        }
-
-        .lab-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(6, 182, 212, 0.3);
-            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.1);
-        }
-
-        .lab-info {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .lab-icon {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-cyan);
-        }
-
-        .lab-card:nth-child(2) .lab-icon {
-            color: var(--accent-blue);
-        }
-
-        .lab-card:nth-child(3) .lab-icon {
-            color: var(--accent-purple);
-        }
-
-        .lab-details h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .lab-details p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .btn-go {
-            color: var(--text-secondary);
-            transition: transform 0.2s, color 0.2s;
-        }
-
-        .lab-card:hover .btn-go {
-            color: var(--text-primary);
-            transform: translateX(4px);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 30px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            margin-top: 50px;
-        }
-    </style>
 </head>
 <body>
 
-    <nav>
-        <a href="../../index.html" class="back-link">
-            <i data-lucide="arrow-left"></i>
-            Volver al Panel
-        </a>
-        <span style="font-size: 0.8rem; background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); padding: 4px 12px; border-radius: 20px; font-weight: 600; text-transform: uppercase;">
-            Joaquín
-        </span>
-    </nav>
-
-    <div class="container">
-        <div class="header-section">
-            <h1>Trabajos Individuales</h1>
-            <p class="description">Portafolio personal con laboratorios prácticos de multimedia.</p>
+    <!-- Header containing Student Name -->
+    <header>
+        <div class="header-container">
+            <div class="header-logo">
+                <h1>PROYECTOS MULTIMEDIA</h1>
+                <p>Procesamiento Digital &amp; Visión Artificial</p>
+            </div>
+            <div class="header-info">
+                <div class="student-name">Joaquin Nicolas Paco Alanoca</div>
+                <div class="student-tag">Estudiante / Desarrollador</div>
+            </div>
         </div>
+    </header>
 
-        <div class="labs-list">
-            <!-- Texturas -->
-            <a href="texturas.html" class="lab-card">
-                <div class="lab-info">
-                    <div class="lab-icon">
-                        <i data-lucide="scan-face"></i>
-                    </div>
-                    <div class="lab-details">
-                        <h2>A. Clasificación de Texturas</h2>
-                        <p>Análisis estadístico de canales RGB y rugosidad en Canvas.</p>
-                    </div>
-                </div>
-                <div class="btn-go">
-                    <i data-lucide="chevron-right"></i>
-                </div>
-            </a>
+    <!-- Main Workspace Layout -->
+    <main>
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <h3 class="sidebar-title">Ejercicios</h3>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-project="texturas" id="nav-texturas">
+                    <span class="nav-item-title">a) Clasificación de Texturas</span>
+                    <span class="nav-item-desc">Segmentación de superficies (Agua, Vegetación, Zona Urbana, Suelo) mediante análisis estadístico por bloques en NumPy.</span>
+                </a>
+                <a href="#" class="nav-item" data-project="suavizado" id="nav-suavizado">
+                    <span class="nav-item-title">b) Filtro de Suavizado</span>
+                    <span class="nav-item-desc">Aplicación de Filtro de Media 3x3 mediante convolución vectorizada con NumPy Slicing para reducción de ruido en imágenes.</span>
+                </a>
+                <a href="#" class="nav-item" data-project="vacalola" id="nav-vacalola">
+                    <span class="nav-item-title">c) Cover "La Vaca Lola"</span>
+                    <span class="nav-item-desc">Script Python con OpenCV que incrusta subtítulos sincronizados sobre un video musical frame a frame.</span>
+                </a>
+                <a href="#" class="nav-item" data-project="documentacion" id="nav-documentacion">
+                    <span class="nav-item-title">Informe</span>
+                    <span class="nav-item-desc">Informe técnico breve y manual de usuario (PDF).</span>
+                </a>
+            </nav>
+        </aside>
 
-            <!-- Filtro -->
-            <a href="filtro.html" class="lab-card">
-                <div class="lab-info">
-                    <div class="lab-icon">
-                        <i data-lucide="sliders"></i>
-                    </div>
-                    <div class="lab-details">
-                        <h2>B. Filtro de Suavizado (3x3)</h2>
-                        <p>Procesamiento de imágenes convolucional Box y Gaussiano.</p>
-                    </div>
-                </div>
-                <div class="btn-go">
-                    <i data-lucide="chevron-right"></i>
-                </div>
-            </a>
+        <!-- Main Display Panel -->
+        <section class="content-area">
+            <!-- Content Header -->
+            <div class="content-area-header">
+                <h2 id="project-title">Clasificación de Texturas</h2>
+                <button class="btn-download-top" onclick="downloadCurrentScript()" id="btn-download-top-action">
+                    Descargar Archivo
+                </button>
+            </div>
 
-            <!-- Vaca Lola -->
-            <a href="vacalola.html" class="lab-card">
-                <div class="lab-info">
-                    <div class="lab-icon">
-                        <i data-lucide="music"></i>
+            <!-- Tabs Navigation -->
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="code" id="tab-btn-code">Código Fuente</button>
+                <button class="tab-btn" data-tab="setup" id="tab-btn-setup">Pasos de Instalación</button>
+                <button class="tab-btn" data-tab="execute" id="tab-btn-execute">Ver ejecución en web</button>
+            </div>
+
+            <!-- Tab Content: Source Code -->
+            <div class="tab-content active" id="code-tab">
+                <div class="code-wrapper">
+                    <pre><code id="code-display" class="language-python"></code></pre>
+                </div>
+            </div>
+
+            <!-- Tab Content: Setup Guide -->
+            <div class="tab-content" id="setup-tab">
+                <div class="setup-guide-box">
+                    <div class="setup-step">
+                        <h4><span class="step-num">1</span> Descargar el Script</h4>
+                        <p>Descarga el archivo fuente haciendo clic en el botón superior derecho.</p>
+                        <button class="btn-primary" onclick="downloadCurrentScript()">📥 Descargar archivo</button>
                     </div>
-                    <div class="lab-details">
-                        <h2>C. Cover "La Vaca Lola"</h2>
-                        <p>Sintetizador Web Audio API y animación SVG síncrona.</p>
+
+                    <div class="setup-step" id="setup-step-deps">
+                        <h4><span class="step-num">2</span> Instalar las Dependencias</h4>
+                        <p>Abre tu terminal (PowerShell, Command Prompt o Bash) e instala las librerías necesarias ejecutando el siguiente comando:</p>
+                        <div class="terminal-box">
+                            <span class="terminal-text" id="cmd-install">pip install pillow numpy</span>
+                            <button class="btn-copy" onclick="navigator.clipboard.writeText(document.getElementById('cmd-install').innerText)">Copiar</button>
+                        </div>
+                    </div>
+
+                    <div class="setup-step" id="setup-step-run">
+                        <h4><span class="step-num">3</span> Ejecutar el Programa</h4>
+                        <p>Ejecuta el comando desde la carpeta donde se descargó el script:</p>
+                        <div class="terminal-box">
+                            <span class="terminal-text" id="cmd-run">python clasificador-texturas.py</span>
+                            <button class="btn-copy" onclick="navigator.clipboard.writeText(document.getElementById('cmd-run').innerText)">Copiar</button>
+                        </div>
                     </div>
                 </div>
-                <div class="btn-go">
-                    <i data-lucide="chevron-right"></i>
+            </div>
+
+            <!-- Tab Content: Web Demonstration (Native Web Container) -->
+            <div class="tab-content" id="execute-tab" style="padding: 0;">
+                <div id="web-demo-container" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                    <!-- iframes or videos will be injected here via js -->
                 </div>
-            </a>
-        </div>
-    </div>
+            </div>
+        </section>
+    </main>
 
-    <div class="footer">
-        <p>© 2026 Laboratorio Multimedia - Joaquín</p>
-    </div>
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 <strong>Joaquin Nicolas Paco Alanoca</strong>.</p>
+    </footer>
 
-    <script>
-        lucide.createIcons();
-    </script>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>

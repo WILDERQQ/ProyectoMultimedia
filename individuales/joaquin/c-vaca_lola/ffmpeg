@@ -1,0 +1,6 @@
+#instalar ffmpeg
+choco install ffmpeg
+
+#ejecutar ffmpeg en cmd
+ffmpeg -i E:\INF263-multimedia\VacaLola\output\video-letra.mp4 -i E:\INF263-multimedia\VacaLola\assets\audio\vacalola.mp3 -c:v copy -c:a aac E:\INF263-multimedia\VacaLola\output\final.mp4
+
