@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         documentacion: {
             title: "Informe Técnico",
-            file: "",
-            demoType: "info",
-            demoUrl: "",
+            file: "informe-joaquin.pdf",
+            demoType: "pdf",
+            demoUrl: "informe-joaquin.pdf",
             isPython: false
         }
     };
@@ -143,17 +143,14 @@ document.addEventListener('DOMContentLoaded', () => {
             iframe.allowFullscreen = true;
             webDemoContainer.appendChild(iframe);
 
-        } else if (data.demoType === 'info') {
-            // Documentacion placeholder
-            webDemoContainer.innerHTML = `
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:1rem;padding:2rem;text-align:center;">
-                    <div style="font-size:3rem;"></div>
-                    <h3 style="color:#ffffff;font-size:1.4rem;">Informe Técnico</h3>
-                    <p style="color:#64748b;max-width:400px;line-height:1.6;">
-                        El informe técnico de este proyecto está disponible en formato PDF. 
-                        Puedes solicitarlo directamente al autor.
-                    </p>
-                </div>`;
+        } else if (data.demoType === 'pdf') {
+            const embed = document.createElement('embed');
+            embed.src = data.demoUrl;
+            embed.type = 'application/pdf';
+            embed.style.width = '100%';
+            embed.style.height = '100%';
+            embed.style.minHeight = '650px';
+            webDemoContainer.appendChild(embed);
         }
     }
 
