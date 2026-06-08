@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             demoType: "video",
             // Google Drive preview URL is acceptable in iframe, or we can use direct video tag if we have the file. 
             // We use iframe pointing to drive preview as requested by user.
-            demoUrl: "https://drive.google.com/file/d/1fcypf-MKWf1eFD77-Lv5W36hmirbIoLb/preview",
+            demoUrl: "https://drive.google.com/file/d/1srPh7fezOkYW4nOA8_nesZiHU33uep2j/preview",
             isPython: false
         },
         documentacion: {
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
             link.click();
             document.body.removeChild(link);
         } else if (currentProject === 'vacalola') {
-            window.open('https://drive.google.com/file/d/1fcypf-MKWf1eFD77-Lv5W36hmirbIoLb/view', '_blank');
+            window.open('https://drive.google.com/drive/folders/1ghSZ3wi3zvLkjOkjbb3x4_BTbjmzHhUB?usp=drive_link', '_blank');
         }
     };
 
