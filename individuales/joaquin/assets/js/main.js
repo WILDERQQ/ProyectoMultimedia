@@ -32,16 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         vacalola: {
             title: "c) Cover \"La Vaca Lola\"",
-            file: "c-vaca_lola/main.py",
-            runCmd: "python main.py",
+            file: "",
             demoType: "drive",
             demoUrl: "https://drive.google.com/file/d/1HniXizcHkK0GLqcvyKFEm3Zc0XMzTPgW/preview",
             driveViewUrl: "https://drive.google.com/file/d/1HniXizcHkK0GLqcvyKFEm3Zc0XMzTPgW/view?usp=drive_link",
-            installCmd: "pip install opencv-python numpy",
-            isPython: true
+            isPython: false
         },
         documentacion: {
-            title: "📄 Informe Técnico",
+            title: "Informe Técnico",
             file: "",
             demoType: "info",
             demoUrl: "",
@@ -149,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Documentacion placeholder
             webDemoContainer.innerHTML = `
                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:1rem;padding:2rem;text-align:center;">
-                    <div style="font-size:3rem;">📄</div>
+                    <div style="font-size:3rem;"></div>
                     <h3 style="color:#ffffff;font-size:1.4rem;">Informe Técnico</h3>
                     <p style="color:#64748b;max-width:400px;line-height:1.6;">
                         El informe técnico de este proyecto está disponible en formato PDF. 
