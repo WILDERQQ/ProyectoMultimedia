@@ -1,259 +1,1909 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trabajos Individuales - Jeremy</title>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(22, 30, 49, 0.75);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-cyan: #06b6d4;
-            --accent-blue: #3b82f6;
-            --accent-purple: #a855f7;
-            --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="J. Jeremy Gonzales Acarapi" />
+  <meta name="description" content="Portafolio individual de actividades multimedia" />
+  <title>Actividades Individuales — J. Jeremy Gonzales Acarapi</title>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <!-- PyScript 2024.1.1 -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+  
+  <py-config>
+    packages = ["numpy", "pillow"]
+  </py-config>
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
-        }
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
-        nav {
-            max-width: 800px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+  <!-- Prism.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
 
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
+  <style>
+    /* =============================================
+       VARIABLES
+    ============================================= */
+    :root {
+      --bg: #080b10;
+      --surface: #0e1420;
+      --surface2: #141c2e;
+      --border: #1e2d4a;
+      --accent: #4f8ef7;
+      --accent2: #22d3ee;
+      --accent3: #a78bfa;
+      --orange: #f97316;
+      --text: #cdd6f4;
+      --text-sec: #6b7a99;
+      --green: #22c55e;
+      --pink: #ec4899;
+      --mono: 'Space Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+      --radius: 10px;
+      --transition: 0.2s ease;
+    }
 
-        .back-link:hover {
-            color: var(--text-primary);
-        }
+    /* =============================================
+       RESET
+    ============================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            width: 100%;
-            flex-grow: 1;
-        }
+    html {
+      scroll-behavior: smooth;
+    }
 
-        .header-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
 
-        h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    /* =============================================
+       LAYOUT PRINCIPAL
+    ============================================= */
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "header header"
+        "sidebar main"
+        "footer footer";
+      min-height: 100vh;
+    }
 
-        .description {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            line-height: 1.6;
-        }
+    /* =============================================
+       HEADER
+    ============================================= */
+    header {
+      grid-area: header;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-        .labs-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    .header-left h1 {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
 
-        .lab-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 24px;
-            backdrop-filter: blur(12px);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-            color: var(--text-primary);
-        }
+    .header-left p {
+      font-size: 11px;
+      color: var(--text-sec);
+      margin-top: 2px;
+      font-family: var(--mono);
+    }
 
-        .lab-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(6, 182, 212, 0.3);
-            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.1);
-        }
+    .header-right {
+      text-align: right;
+    }
 
-        .lab-info {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
+    .header-right .name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
 
-        .lab-icon {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-cyan);
-        }
+    .header-right .role {
+      font-size: 11px;
+      color: var(--accent2);
+      font-family: var(--mono);
+    }
 
-        .lab-card:nth-child(2) .lab-icon {
-            color: var(--accent-blue);
-        }
+    /* =============================================
+       SIDEBAR
+    ============================================= */
+    aside {
+      grid-area: sidebar;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
 
-        .lab-card:nth-child(3) .lab-icon {
-            color: var(--accent-purple);
-        }
+    .sidebar-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      padding: 0 20px;
+      margin-bottom: 12px;
+    }
 
-        .lab-details h2 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
+    .nav-item {
+      display: block;
+      padding: 14px 20px;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: var(--transition);
+      text-decoration: none;
+    }
 
-        .lab-details p {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
+    .nav-item:hover {
+      background: var(--surface2);
+      border-left-color: var(--border);
+    }
 
-        .btn-go {
-            color: var(--text-secondary);
-            transition: transform 0.2s, color 0.2s;
-        }
+    .nav-item.active {
+      background: var(--surface2);
+      border-left-color: var(--accent);
+    }
 
-        .lab-card:hover .btn-go {
-            color: var(--text-primary);
-            transform: translateX(4px);
-        }
+    .nav-item .nav-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
 
-        .footer {
-            text-align: center;
-            padding: 30px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            margin-top: 50px;
-        }
-    </style>
+    .nav-item.active .nav-title {
+      color: var(--accent);
+    }
+
+    .nav-item .nav-desc {
+      font-size: 11px;
+      color: var(--text-sec);
+      line-height: 1.4;
+    }
+
+    .nav-item.nav-informe.active {
+      border-left-color: var(--pink);
+    }
+
+    .nav-item.nav-informe.active .nav-title {
+      color: var(--pink);
+    }
+
+    /* =============================================
+       MAIN
+    ============================================= */
+    main {
+      grid-area: main;
+      padding: 32px;
+      overflow-y: auto;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .section-sub {
+      font-size: 12px;
+      color: var(--text-sec);
+      margin-top: 4px;
+      font-family: var(--mono);
+    }
+
+    .section-sub.pink {
+      color: var(--pink);
+    }
+
+    /* =============================================
+       TABS
+    ============================================= */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-sec);
+      font-family: var(--sans);
+      font-size: 13px;
+      padding: 10px 18px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: var(--transition);
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* =============================================
+       PANELES
+    ============================================= */
+    .app-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .app-toolbar {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .app-toolbar .group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .app-toolbar .group-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-sec);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .divider-v {
+      width: 1px;
+      height: 28px;
+      background: var(--border);
+      margin: 0 4px;
+    }
+
+    /* =============================================
+       BOTONES
+    ============================================= */
+    .btn {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background: var(--surface2);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: #3a7de8;
+      color: #fff;
+    }
+
+    /* =============================================
+       SELECT Y RADIO
+    ============================================= */
+    select {
+      font-family: var(--sans);
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: var(--accent);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .radio-group label {
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--text-sec);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .radio-group input[type="radio"] {
+      display: none;
+    }
+
+    .radio-group input[type="radio"]:checked + label {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* =============================================
+       PROGRESO
+    ============================================= */
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    progress {
+      appearance: none;
+      width: 160px;
+      height: 4px;
+      border-radius: 2px;
+      overflow: hidden;
+      border: none;
+    }
+
+    progress::-webkit-progress-bar {
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    progress::-webkit-progress-value {
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    progress::-moz-progress-bar {
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .status-txt {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-sec);
+    }
+
+    /* =============================================
+       CANVAS
+    ============================================= */
+    .canvas-grid {
+      display: grid;
+      padding: 18px;
+      gap: 14px;
+    }
+
+    .canvas-grid.two {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .canvas-grid.three {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .canvas-wrap {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .canvas-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .canvas-label.orig {
+      color: var(--orange);
+    }
+
+    .canvas-label.proc {
+      color: var(--accent2);
+    }
+
+    .canvas-label.diff {
+      color: var(--accent3);
+    }
+
+    .canvas-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 260px;
+      padding: 8px;
+    }
+
+    canvas {
+      max-width: 100%;
+      max-height: 280px;
+      border-radius: 4px;
+      display: block;
+    }
+
+    .canvas-placeholder {
+      text-align: center;
+      color: var(--text-sec);
+      font-size: 12px;
+      font-family: var(--mono);
+      padding: 40px 20px;
+    }
+
+    /* =============================================
+       METRICAS
+    ============================================= */
+    .metrics-bar {
+      background: var(--surface2);
+      border-top: 1px solid var(--border);
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .metric-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .metric-value {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent2);
+    }
+
+    /* =============================================
+       LEYENDA
+    ============================================= */
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 18px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .legend-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* =============================================
+       INSTALACION
+    ============================================= */
+    .install-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 640px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .step-body h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .step-body p {
+      font-size: 13px;
+      color: var(--text-sec);
+      margin-bottom: 8px;
+    }
+
+    /* =============================================
+       BLOQUES DE CODIGO
+    ============================================= */
+    .code-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent2);
+      position: relative;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .copy-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 10px;
+      color: var(--text-sec);
+      cursor: pointer;
+      font-family: var(--mono);
+    }
+
+    .copy-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      grid-area: footer;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 14px 32px;
+      text-align: center;
+      font-size: 11px;
+      font-family: var(--mono);
+      color: var(--text-sec);
+    }
+
+    /* =============================================
+       ALERTAS
+    ============================================= */
+    .alert {
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      margin-bottom: 12px;
+    }
+
+    .alert-info {
+      background: #0e2040;
+      border: 1px solid #1e4080;
+      color: var(--accent2);
+    }
+
+    .alert-success {
+      background: #0a2a1a;
+      border: 1px solid #1a5a3a;
+      color: var(--green);
+    }
+
+    /* =============================================
+       TABLAS
+    ============================================= */
+    .metrics-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .metrics-table th {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 8px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .metrics-table td {
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .metrics-table td.val {
+      font-family: var(--mono);
+      color: var(--accent2);
+      font-weight: 700;
+    }
+
+    /* =============================================
+       CODIGO FUENTE
+    ============================================= */
+    .source-code-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .source-code-header {
+      background: var(--surface2);
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .source-code-header .file-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent2);
+    }
+
+    .source-code-header .copy-btn-source {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-sec);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 10px;
+      cursor: pointer;
+      font-family: var(--mono);
+    }
+
+    .source-code-header .copy-btn-source:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .source-code-content {
+      padding: 16px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .source-code-content pre {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.5;
+      font-family: var(--mono);
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* =============================================
+       PREVIEW VACA LOLA
+    ============================================= */
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .preview-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .preview-card h4 {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .preview-card p {
+      font-size: 12px;
+      color: var(--text-sec);
+      line-height: 1.5;
+    }
+
+    .preview-card .controls-table {
+      width: 100%;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--text);
+    }
+
+    .preview-card .controls-table td {
+      padding: 4px 8px;
+      font-family: var(--mono);
+    }
+
+    .preview-card .controls-table td:first-child {
+      color: var(--accent2);
+      width: 80px;
+    }
+
+    /* =============================================
+       VISOR PDF
+    ============================================= */
+    .pdf-viewer {
+      width: 100%;
+      height: 75vh;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+  </style>
 </head>
+
 <body>
 
-    <nav>
-        <a href="../../index.html" class="back-link">
-            <i data-lucide="arrow-left"></i>
-            Volver al Panel
+<!-- =============================================
+     LAYOUT PRINCIPAL
+============================================= -->
+<div class="layout">
+
+  <!-- =============================================
+       HEADER
+  ============================================= -->
+  <header>
+    <div class="header-left">
+      <h1>Actividades Individuales — Multimedia</h1>
+      <p>Procesamiento Digital de Imagenes a nivel de pixel</p>
+    </div>
+    <div class="header-right">
+      <div class="name">J. Jeremy Gonzales Acarapi</div>
+      <div class="role">Estudiante / Informatica — UMSA</div>
+    </div>
+  </header>
+
+  <!-- =============================================
+       SIDEBAR
+  ============================================= -->
+  <aside>
+    <div class="sidebar-label">Ejercicios</div>
+
+    <a class="nav-item active" onclick="showSection('sec-a', this)">
+      <div class="nav-title">a) Clasificacion de Texturas</div>
+      <div class="nav-desc">Segmentacion de superficies mediante HSV + varianza local 3x3.</div>
+    </a>
+
+    <a class="nav-item" onclick="showSection('sec-b', this)">
+      <div class="nav-title">b) Filtro de Suavizado</div>
+      <div class="nav-desc">Filtro de promedio 3x3 con visualizacion comparativa y metricas.</div>
+    </a>
+
+    <a class="nav-item" onclick="showSection('sec-c', this)">
+      <div class="nav-title">c) Cover Vaca Lola</div>
+      <div class="nav-desc">Produccion multimedia al estilo Bad Bunny / J Balvin.</div>
+    </a>
+
+    <div class="sidebar-label" style="margin-top:20px">Documentacion</div>
+
+    <a class="nav-item nav-informe" onclick="showSection('sec-informe', this)">
+      <div class="nav-title">Informe Final</div>
+      <div class="nav-desc">Informe escrito de las 3 actividades individuales (PDF).</div>
+    </a>
+  </aside>
+
+  <!-- =============================================
+       MAIN
+  ============================================= -->
+  <main>
+
+    <!-- =============================================
+         SECCION A - CLASIFICACION DE TEXTURAS
+    ============================================= -->
+    <section id="sec-a" class="section active">
+
+      <div class="section-header">
+        <div>
+          <div class="section-title">Clasificacion de Texturas</div>
+          <div class="section-sub">Actividad Individual a) — Color HSV + Varianza local 3x3</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('a', 'run', this)">Ejecutar en web</button>
+        <button class="tab-btn" onclick="showTab('a', 'install', this)">Pasos de instalacion</button>
+        <button class="tab-btn" onclick="showTab('a', 'source', this)">Codigo fuente</button>
+      </div>
+
+      <!-- Tab Ejecutar -->
+      <div id="a-tab-run" class="tab-content active">
+
+        <div class="alert alert-info">
+          Cargando entorno Python (numpy + pillow)... La primera vez puede tardar 15-30 segundos.
+        </div>
+
+        <div class="app-panel">
+
+          <div class="app-toolbar">
+            <div class="group">
+              <span class="group-label">Imagen</span>
+              <input type="file" id="a-file-input" accept="image/*" style="display:none" />
+              <button class="btn" onclick="document.getElementById('a-file-input').click()">Cargar imagen</button>
+              <span class="group-label" style="margin-left:6px">Ejemplo:</span>
+              <select id="a-ejemplo-select">
+                <option value="cesped">Cesped</option>
+                <option value="tierra">Tierra</option>
+                <option value="cemento">Cemento</option>
+                <option value="asfalto">Asfalto</option>
+              </select>
+              <button class="btn" onclick="cargarEjemploA()">Cargar ejemplo</button>
+            </div>
+
+            <div class="divider-v"></div>
+
+            <div class="group">
+              <span class="group-label">Visualizar</span>
+              <div class="radio-group">
+                <input type="radio" name="a-filtro" id="a-f-todas" value="Todas" checked />
+                <label for="a-f-todas">Todas</label>
+                <input type="radio" name="a-filtro" id="a-f-cesped" value="Cesped" />
+                <label for="a-f-cesped">Cesped</label>
+                <input type="radio" name="a-filtro" id="a-f-tierra" value="Tierra" />
+                <label for="a-f-tierra">Tierra</label>
+                <input type="radio" name="a-filtro" id="a-f-cemento" value="Cemento" />
+                <label for="a-f-cemento">Cemento</label>
+                <input type="radio" name="a-filtro" id="a-f-asfalto" value="Asfalto" />
+                <label for="a-f-asfalto">Asfalto</label>
+              </div>
+            </div>
+
+            <div class="divider-v"></div>
+
+            <div class="group">
+              <span class="group-label">Accion</span>
+              <button class="btn btn-primary" id="a-btn-clasificar" onclick="clasificarTexturas()" disabled>Clasificar</button>
+            </div>
+
+            <div class="progress-wrap" style="margin-left:auto">
+              <progress id="a-progress" value="0" max="100"></progress>
+              <span class="status-txt" id="a-status">Cargue una imagen</span>
+            </div>
+          </div>
+
+          <div class="canvas-grid two">
+            <div class="canvas-wrap">
+              <div class="canvas-label orig">Imagen original</div>
+              <div class="canvas-inner" id="a-canvas-orig-wrap">
+                <div class="canvas-placeholder">Sin imagen cargada</div>
+              </div>
+            </div>
+            <div class="canvas-wrap">
+              <div class="canvas-label proc">Mapa de texturas</div>
+              <div class="canvas-inner" id="a-canvas-res-wrap">
+                <div class="canvas-placeholder">Resultado aparecera aqui</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend">
+            <span class="legend-label">Leyenda</span>
+            <div class="legend-item"><div class="legend-dot" style="background:#228b22"></div>Cesped</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#8b5a2b"></div>Tierra</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#b4b4b4"></div>Cemento</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#323232"></div>Asfalto</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#be5abe"></div>Otro</div>
+            <span id="a-stats" class="status-txt" style="margin-left:auto"></span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Tab Instalacion -->
+      <div id="a-tab-install" class="tab-content">
+        <div class="install-steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Descargar el proyecto</h4>
+              <p>Clona el repositorio o descarga la carpeta del ejercicio.</p>
+              <div class="code-block">
+                git clone https://github.com/JohanRaccon/ProyectoMultimedia.git
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Instalar dependencias</h4>
+              <p>Desde la terminal, instala las librerias necesarias:</p>
+              <div class="code-block">
+                pip install pillow numpy
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Ejecutar la aplicacion</h4>
+              <p>Entra a la carpeta del ejercicio y ejecuta:</p>
+              <div class="code-block">
+                cd "A) Clasificacion de texturas/clasificador_texturas" && python main.py
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Codigo Fuente -->
+      <div id="a-tab-source" class="tab-content">
+        <div class="source-code-wrapper">
+          <div class="source-code-header">
+            <span class="file-name">main.py</span>
+            <button class="copy-btn-source" onclick="copySourceCode('a-source-main')">Copiar</button>
+          </div>
+          <div class="source-code-content">
+            <pre><code id="a-source-main" class="language-python">"""
+Clasificador de Texturas - Actividad Individual - Multimedia
+Interfaz grafica construida con Tkinter + PIL.
+"""
+import tkinter as tk
+from tkinter import filedialog, ttk
+import threading, os, sys
+from PIL import Image, ImageTk
+import numpy as np
+# ... (ver archivo completo en el repositorio)</code></pre>
+          </div>
+        </div>
+        <div class="source-code-wrapper">
+          <div class="source-code-header">
+            <span class="file-name">src/clasificador.py</span>
+            <button class="copy-btn-source" onclick="copySourceCode('a-source-clasif')">Copiar</button>
+          </div>
+          <div class="source-code-content">
+            <pre><code id="a-source-clasif" class="language-python">"""
+Modulo de procesamiento - Clasificacion HSV + Varianza local
+"""
+import numpy as np
+CLASES = ["Cesped", "Tierra", "Cemento", "Asfalto", "Otro"]
+# ... (ver archivo completo en el repositorio)</code></pre>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =============================================
+         SECCION B - FILTRO DE SUAVIZADO
+    ============================================= -->
+    <section id="sec-b" class="section">
+
+      <div class="section-header">
+        <div>
+          <div class="section-title">Filtro de Suavizado 3x3</div>
+          <div class="section-sub">Actividad Individual b) — Filtro de promedio a nivel de pixel</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('b', 'run', this)">Ejecutar en web</button>
+        <button class="tab-btn" onclick="showTab('b', 'install', this)">Pasos de instalacion</button>
+        <button class="tab-btn" onclick="showTab('b', 'source', this)">Codigo fuente</button>
+      </div>
+
+      <!-- Tab Ejecutar -->
+      <div id="b-tab-run" class="tab-content active">
+
+        <div class="alert alert-info">
+          Cargando entorno Python (numpy + pillow)... La primera vez puede tardar 15-30 segundos.
+        </div>
+
+        <div class="app-panel">
+
+          <div class="app-toolbar">
+            <div class="group">
+              <span class="group-label">Imagen</span>
+              <input type="file" id="b-file-input" accept="image/*" style="display:none" />
+              <button class="btn" onclick="document.getElementById('b-file-input').click()">Cargar imagen</button>
+              <select id="b-ejemplo-select">
+                <option value="rostro">Rostro</option>
+                <option value="ciudad">Ciudad</option>
+              </select>
+              <button class="btn" onclick="cargarEjemploB()">Cargar ejemplo</button>
+            </div>
+
+            <div class="divider-v"></div>
+
+            <div class="group">
+              <span class="group-label">Pasadas</span>
+              <div class="radio-group">
+                <input type="radio" name="b-iter" id="b-i1" value="1" checked />
+                <label for="b-i1">1 pasada</label>
+                <input type="radio" name="b-iter" id="b-i2" value="2" />
+                <label for="b-i2">2 pasadas</label>
+                <input type="radio" name="b-iter" id="b-i3" value="3" />
+                <label for="b-i3">3 pasadas</label>
+              </div>
+            </div>
+
+            <div class="divider-v"></div>
+
+            <button class="btn btn-primary" id="b-btn-aplicar" onclick="aplicarFiltro()" disabled>Aplicar filtro</button>
+
+            <div class="progress-wrap" style="margin-left:auto">
+              <progress id="b-progress" value="0" max="100"></progress>
+              <span class="status-txt" id="b-status">Cargue una imagen</span>
+            </div>
+          </div>
+
+          <div class="canvas-grid three">
+            <div class="canvas-wrap">
+              <div class="canvas-label orig">Antes — Original</div>
+              <div class="canvas-inner" id="b-canvas-orig-wrap">
+                <div class="canvas-placeholder">Sin imagen cargada</div>
+              </div>
+            </div>
+            <div class="canvas-wrap">
+              <div class="canvas-label proc">Despues — Suavizado</div>
+              <div class="canvas-inner" id="b-canvas-suav-wrap">
+                <div class="canvas-placeholder">Resultado aqui</div>
+              </div>
+            </div>
+            <div class="canvas-wrap">
+              <div class="canvas-label diff">Diferencia x5</div>
+              <div class="canvas-inner" id="b-canvas-diff-wrap">
+                <div class="canvas-placeholder">Diferencia aqui</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="metrics-bar" id="b-metrics" style="display:none">
+            <div class="metric">
+              <span class="metric-label">MSE</span>
+              <span class="metric-value" id="b-mse">—</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">MAE</span>
+              <span class="metric-value" id="b-mae">—</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">PSNR</span>
+              <span class="metric-value" id="b-psnr">—</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Pixeles modificados</span>
+              <span class="metric-value" id="b-pixmod">—</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Tab Instalacion -->
+      <div id="b-tab-install" class="tab-content">
+        <div class="install-steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Descargar el proyecto</h4>
+              <div class="code-block">
+                git clone https://github.com/JohanRaccon/ProyectoMultimedia.git
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Instalar dependencias</h4>
+              <div class="code-block">
+                pip install pillow numpy
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Ejecutar la aplicacion</h4>
+              <div class="code-block">
+                cd "B) Implementacion Filtro y Suavisado/filtro_suavizado" && python main.py
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Codigo Fuente -->
+      <div id="b-tab-source" class="tab-content">
+        <div class="source-code-wrapper">
+          <div class="source-code-header">
+            <span class="file-name">main.py</span>
+            <button class="copy-btn-source" onclick="copySourceCode('b-source-main')">Copiar</button>
+          </div>
+          <div class="source-code-content">
+            <pre><code id="b-source-main" class="language-python">"""Filtro de Suavizado 3x3 - Multimedia UMSA"""
+import tkinter as tk, threading, os, sys
+from PIL import Image, ImageTk
+import numpy as np
+# ... (ver archivo completo en el repositorio)</code></pre>
+          </div>
+        </div>
+        <div class="source-code-wrapper">
+          <div class="source-code-header">
+            <span class="file-name">src/filtro.py</span>
+            <button class="copy-btn-source" onclick="copySourceCode('b-source-filtro')">Copiar</button>
+          </div>
+          <div class="source-code-content">
+            <pre><code id="b-source-filtro" class="language-python">import numpy as np
+
+VENTANA = 3
+
+def filtro_promedio_3x3(img_array, iteraciones=1, callback=None):
+    resultado = img_array.astype(np.float32).copy()
+    for it in range(iteraciones):
+        alto, ancho, _ = resultado.shape
+        img_pad = np.pad(resultado, ((1,1),(1,1),(0,0)), mode="reflect")
+        salida = np.zeros_like(resultado)
+        for i in range(alto):
+            for j in range(ancho):
+                ventana = img_pad[i:i+VENTANA, j:j+VENTANA, :]
+                salida[i,j,:] = np.mean(ventana, axis=(0,1))
+        resultado = salida
+    return np.clip(resultado, 0, 255).astype(np.uint8)</code></pre>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =============================================
+         SECCION C - COVER VACA LOLA
+    ============================================= -->
+    <section id="sec-c" class="section">
+
+      <div class="section-header">
+        <div>
+          <div class="section-title">Cover Vaca Lola</div>
+          <div class="section-sub">Actividad Individual c) — Produccion multimedia al estilo Bad Bunny / J Balvin</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('c', 'preview', this)">Vista previa</button>
+        <button class="tab-btn" onclick="showTab('c', 'install', this)">Pasos de instalacion</button>
+        <button class="tab-btn" onclick="showTab('c', 'source', this)">Codigo fuente</button>
+      </div>
+
+      <!-- Tab Vista Previa -->
+      <div id="c-tab-preview" class="tab-content active">
+
+        <div class="alert alert-success">
+          Este proyecto usa Pygame y se ejecuta localmente. Requiere Python 3.10+ y pygame instalado.
+        </div>
+
+        <div class="preview-grid">
+          <div class="preview-card">
+            <div style="font-size:64px;margin-bottom:12px">🐄</div>
+            <h4>La Vaca Lola — Cover Pop</h4>
+            <p>Produccion multimedia de la cancion infantil "La Vaca Lola Remix" con identidad artistica de Enrique Iglesias.</p>
+            <p style="margin-top:10px;color:var(--accent2);font-size:11px;">
+              🎵 Audio sincronizado · 🕺 Monigotes animados · Particulas · Vaca con bounce
+            </p>
+          </div>
+
+          <div class="preview-card">
+            <div style="font-size:64px;margin-bottom:12px">🎮</div>
+            <h4>Controles del programa</h4>
+            <table class="controls-table">
+              <tr><td>ESPACIO</td><td>Pausar / Reanudar</td></tr>
+              <tr><td>ESC</td><td>Menu (en show) / Salir</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="app-panel" style="margin-top:20px">
+          <div class="app-toolbar">
+            <span class="group-label">Requisitos</span>
+          </div>
+          <div style="padding:20px">
+            <table class="metrics-table">
+              <tr><th>Componente</th><th>Detalle</th></tr>
+              <tr><td>Python</td><td class="val">3.10+</td></tr>
+              <tr><td>Libreria</td><td class="val">pygame</td></tr>
+              <tr><td>Audio</td><td>Archivo MP3 de la cancion</td></tr>
+              <tr><td>BPM Default</td><td class="val">120 BPM</td></tr>
+              <tr><td>Resolucion</td><td class="val">900 x 600 px</td></tr>
+              <tr><td>FPS</td><td class="val">60</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="app-panel" style="margin-top:16px">
+          <div class="app-toolbar">
+            <span class="group-label">Estructura del proyecto</span>
+          </div>
+          <div style="padding:16px">
+            <div class="code-block" style="font-size:11px;line-height:1.6;">
+🐄 vaca_lola_fix/
+├── 🚀 main.py                  # Punto de entrada
+├── ⚙️ config.py                # Constantes globales
+├── 📁 src/
+│   ├── 🎬 escena.py            # Controlador principal
+│   ├── 🕺 personajes/
+│   │   ├── monigote.py         # Stick-figure animado
+│   │   └── 🐄 vaca.py          # Vaca animada
+│   ├── 🎵 audio/
+│   │   ├── gestor_audio.py     # Control de audio
+│   │   └── letras.py           # Letras sincronizadas
+│   ├── 🖥️ ui/
+│   │   ├── pantalla_menu.py
+│   │   ├── pantalla_show.py
+│   │   ├── hud.py
+│   │   └── ✨ particulas.py
+│   └── 🛠️ utils/
+│       ├── draw.py
+│       └── anim.py
+└── 🎥 assets/
+    └── video/
+        └── video.mp4
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Instalacion -->
+      <div id="c-tab-install" class="tab-content">
+        <div class="install-steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <h4>Descargar el proyecto</h4>
+              <div class="code-block">
+                git clone https://github.com/JohanRaccon/ProyectoMultimedia.git
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <h4>Instalar dependencias</h4>
+              <div class="code-block">
+                pip install pygame
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <h4>Agregar archivo de audio</h4>
+              <p>Coloca tu archivo MP3 en <code>src/audio/audio.mp3</code></p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <h4>Ejecutar</h4>
+              <div class="code-block">
+                cd "C) Cover Vaca Lola/vaca_lola_fix" && python main.py
+                <button class="copy-btn" onclick="copyCode(this)">copiar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Codigo Fuente -->
+      <div id="c-tab-source" class="tab-content">
+        <div class="source-code-wrapper">
+          <div class="source-code-header">
+            <span class="file-name">main.py — Punto de entrada</span>
+            <button class="copy-btn-source" onclick="copySourceCode('c-source-main')">Copiar</button>
+          </div>
+          <div class="source-code-content">
+            <pre><code id="c-source-main" class="language-python">"""
+🐄 La Vaca Lola - Cover Multimedia
+================================
+Actividad Individual - Multimedia - UMSA
+"""
+
+from src.escena import EscenaVacaLola
+
+
+if __name__ == "__main__":
+    app = EscenaVacaLola()
+    app.run()</code></pre>
+          </div>
+        </div>
+
+        <div class="source-code-wrapper">
+          <div class="source-code-header">
+            <span class="file-name">config.py — Constantes globales</span>
+            <button class="copy-btn-source" onclick="copySourceCode('c-source-config')">📋 Copiar</button>
+          </div>
+          <div class="source-code-content">
+            <pre><code id="c-source-config" class="language-python">"""
+Constantes globales de la aplicacion
+"""
+
+VENTANA_W = 900
+VENTANA_H = 600
+FPS       = 60
+TITULO    = "LA VACA LOLA |  Multimedia UMSA"
+
+BPM_DEFAULT      = 120
+NUM_PARTICULAS   = 60
+NUM_ESTRELLAS    = 80
+
+NEGRO       = (  5,   5,   8)
+MORADO      = (120,   0, 220)
+CYAN        = (  0, 230, 255)
+AMARILLO    = (255, 220,   0)
+ROSA        = (255,  30, 120)
+BLANCO      = (255, 255, 255)</code></pre>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =============================================
+         INFORME FINAL
+    ============================================= -->
+    <section id="sec-informe" class="section">
+
+      <div class="section-header">
+        <div>
+          <div class="section-title">📄 Informe Final</div>
+          <div class="section-sub pink">Documento escrito de las 3 actividades individuales</div>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        Informe en PDF.
+        <a href="informe_multimedia_jeremy.pdf" download style="color:var(--accent2);margin-left:12px;font-family:var(--mono);font-size:11px;">
+          Descargar PDF
         </a>
-        <span style="font-size: 0.8rem; background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); padding: 4px 12px; border-radius: 20px; font-weight: 600; text-transform: uppercase;">
-            Jeremy
-        </span>
-    </nav>
+      </div>
 
-    <div class="container">
-        <div class="header-section">
-            <h1>Trabajos Individuales</h1>
-            <p class="description">Portafolio personal con laboratorios prácticos de multimedia.</p>
-        </div>
+      <iframe src="informe_multimedia_jeremy.pdf" class="pdf-viewer" title="Informe Multimedia"></iframe>
 
-        <div class="labs-list">
-            <!-- Texturas -->
-            <a href="texturas.html" class="lab-card">
-                <div class="lab-info">
-                    <div class="lab-icon">
-                        <i data-lucide="scan-face"></i>
-                    </div>
-                    <div class="lab-details">
-                        <h2>A. Clasificación de Texturas</h2>
-                        <p>Análisis estadístico de canales RGB y rugosidad en Canvas.</p>
-                    </div>
-                </div>
-                <div class="btn-go">
-                    <i data-lucide="chevron-right"></i>
-                </div>
-            </a>
+    </section>
 
-            <!-- Filtro -->
-            <a href="filtro.html" class="lab-card">
-                <div class="lab-info">
-                    <div class="lab-icon">
-                        <i data-lucide="sliders"></i>
-                    </div>
-                    <div class="lab-details">
-                        <h2>B. Filtro de Suavizado (3x3)</h2>
-                        <p>Procesamiento de imágenes convolucional Box y Gaussiano.</p>
-                    </div>
-                </div>
-                <div class="btn-go">
-                    <i data-lucide="chevron-right"></i>
-                </div>
-            </a>
+  </main>
 
-            <!-- Vaca Lola -->
-            <a href="vacalola.html" class="lab-card">
-                <div class="lab-info">
-                    <div class="lab-icon">
-                        <i data-lucide="music"></i>
-                    </div>
-                    <div class="lab-details">
-                        <h2>C. Cover "La Vaca Lola"</h2>
-                        <p>Sintetizador Web Audio API y animación SVG síncrona.</p>
-                    </div>
-                </div>
-                <div class="btn-go">
-                    <i data-lucide="chevron-right"></i>
-                </div>
-            </a>
-        </div>
-    </div>
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer>
+    &copy; 2026 — Universidad Mayor de San Andres — Actividades Individuales de Multimedia — J. Jeremy Gonzales Acarapi
+  </footer>
 
-    <div class="footer">
-        <p>© 2026 Laboratorio Multimedia - Jeremy</p>
-    </div>
+</div>
 
-    <script>
-        lucide.createIcons();
-    </script>
+<!-- =============================================
+     PyScript: Clasificador A
+============================================= -->
+<script type="py" id="py-a">
+import js, io, math
+import numpy as np
+from PIL import Image
+from pyodide.ffi import create_proxy
+
+_img_array_a = None
+
+HSV_RANGOS = {
+    "Cesped":  {"h": (55,175), "s": (0.12,1.00), "v": (0.08,0.88)},
+    "Tierra":  {"h": (8,42),   "s": (0.18,0.88), "v": (0.12,0.78)},
+    "Cemento": {"h": (0,360),  "s": (0.00,0.18), "v": (0.38,0.94)},
+    "Asfalto": {"h": (0,360),  "s": (0.00,0.32), "v": (0.00,0.36)},
+}
+
+COLORES = {
+    "Cesped":  (34,139,34),
+    "Tierra":  (139,90,43),
+    "Cemento": (180,180,180),
+    "Asfalto": (50,50,50),
+    "Otro":    (190,90,190),
+}
+
+def rgb_a_hsv(r, g, b):
+    r, g, b = r/255, g/255, b/255
+    mx, mn = max(r,g,b), min(r,g,b)
+    delta = mx - mn
+    v = mx
+    s = (delta/mx) if mx != 0 else 0
+    if delta == 0: h = 0
+    elif mx == r: h = 60 * (((g-b)/delta) % 6)
+    elif mx == g: h = 60 * (((b-r)/delta) + 2)
+    else: h = 60 * (((r-g)/delta) + 4)
+    return h, s, v
+
+def varianza_local(gray):
+    H, W = gray.shape
+    var = np.zeros((H, W), dtype=np.float32)
+    pad = np.pad(gray.astype(np.float32), 1, mode="reflect")
+    for i in range(H):
+        for j in range(W):
+            var[i,j] = float(np.var(pad[i:i+3, j:j+3]))
+    return var
+
+def clasificar_pixel(h, s, v, var):
+    pts = {}
+    for cls, rng in HSV_RANGOS.items():
+        pts[cls] = (
+            int(rng["h"][0] <= h <= rng["h"][1]) +
+            int(rng["s"][0] <= s <= rng["s"][1]) +
+            int(rng["v"][0] <= v <= rng["v"][1])
+        )
+    if var > 600:
+        pts["Cesped"] = pts.get("Cesped", 0) + 1
+        pts["Tierra"] = pts.get("Tierra", 0) + 1
+    elif var > 200:
+        pts["Tierra"]  = pts.get("Tierra", 0) + 1
+        pts["Cemento"] = pts.get("Cemento", 0) + 1
+    else:
+        pts["Cemento"] = pts.get("Cemento", 0) + 1
+        pts["Asfalto"] = pts.get("Asfalto", 0) + 2
+    mejor = max(pts, key=pts.get)
+    return "Otro" if pts[mejor] <= 1 else mejor
+
+def img_a_canvas(arr, canvas_id):
+    img_pil = Image.fromarray(arr.astype(np.uint8))
+    buf = io.BytesIO()
+    img_pil.save(buf, format="PNG")
+    b64 = js.btoa("".join(chr(b) for b in buf.getvalue()))
+    data_url = "data:image/png;base64," + b64
+    js.cargarImagenEnCanvas(canvas_id, data_url, img_pil.width, img_pil.height)
+
+def set_status_a(msg, pct=None):
+    js.document.getElementById("a-status").textContent = msg
+    if pct is not None:
+        js.document.getElementById("a-progress").value = pct
+
+def on_file_a(event):
+    global _img_array_a
+    files = event.target.files
+    if files.length == 0:
+        return
+    reader = js.FileReader.new()
+    def on_load(e):
+        global _img_array_a
+        data = reader.result
+        b64 = data.split(",")[1]
+        raw = js.atob(b64)
+        ba = bytearray([ord(c) for c in raw])
+        img = Image.open(io.BytesIO(ba)).convert("RGB")
+        MAX = 300
+        w, h = img.size
+        if w > MAX or h > MAX:
+            f = MAX / max(w, h)
+            img = img.resize((int(w*f), int(h*f)), Image.LANCZOS)
+        _img_array_a = np.array(img)
+        img_a_canvas(_img_array_a, "a-canvas-orig")
+        set_status_a(f"Imagen cargada: {img.size[0]}x{img.size[1]} px", 0)
+        js.document.getElementById("a-btn-clasificar").disabled = False
+    reader.onloadend = create_proxy(on_load)
+    reader.readAsDataURL(files.item(0))
+
+def clasificar():
+    global _img_array_a
+    if _img_array_a is None:
+        return
+    set_status_a("Clasificando...", 0)
+    js.document.getElementById("a-btn-clasificar").disabled = True
+
+    filtro = None
+    for rb in js.document.querySelectorAll("input[name='a-filtro']"):
+        if rb.checked:
+            filtro = rb.value
+            break
+
+    H, W, _ = _img_array_a.shape
+    gray = np.mean(_img_array_a, axis=2)
+    var_map = varianza_local(gray)
+    resultado = np.zeros((H, W, 3), dtype=np.uint8)
+    conteos = {k: 0 for k in list(COLORES.keys())}
+    total = H * W
+    paso = max(1, total // 50)
+
+    for i in range(H):
+        for j in range(W):
+            r = int(_img_array_a[i,j,0])
+            g = int(_img_array_a[i,j,1])
+            b = int(_img_array_a[i,j,2])
+            h, s, v = rgb_a_hsv(r, g, b)
+            cls = clasificar_pixel(h, s, v, float(var_map[i,j]))
+            conteos[cls] += 1
+            if filtro == "Todas":
+                resultado[i,j] = COLORES[cls]
+            else:
+                if cls == filtro:
+                    resultado[i,j] = COLORES[cls]
+                else:
+                    gv = max(0, int(0.299*r + 0.587*g + 0.114*b) - 60)
+                    resultado[i,j] = (gv, gv, gv)
+            if (i*W + j) % paso == 0:
+                pct = (i*W + j) / total * 100
+                set_status_a(f"Clasificando... {int(pct)}%", pct)
+
+    img_a_canvas(resultado, "a-canvas-res")
+    set_status_a("Clasificacion completada", 100)
+    js.document.getElementById("a-btn-clasificar").disabled = False
+
+    tot = sum(conteos.values()) or 1
+    stats = "  |  ".join(f"{k}: {v/tot*100:.1f}%" for k, v in conteos.items() if v > 0)
+    js.document.getElementById("a-stats").textContent = stats
+
+# Vincular eventos y exponer función
+js.document.getElementById("a-file-input").addEventListener("change", create_proxy(on_file_a))
+js.window.clasificarTexturasPy = create_proxy(clasificar)
+</script>
+
+<!-- =============================================
+     PyScript: Filtro B
+============================================= -->
+<script type="py" id="py-b">
+import js, io, math
+import numpy as np
+from PIL import Image
+from pyodide.ffi import create_proxy
+
+_img_array_b = None
+
+def img_b_canvas(arr, canvas_id):
+    img_pil = Image.fromarray(arr.astype(np.uint8))
+    buf = io.BytesIO()
+    img_pil.save(buf, format="PNG")
+    b64 = js.btoa("".join(chr(b) for b in buf.getvalue()))
+    data_url = "data:image/png;base64," + b64
+    js.cargarImagenEnCanvas(canvas_id, data_url, img_pil.width, img_pil.height)
+
+def set_status_b(msg, pct=None):
+    js.document.getElementById("b-status").textContent = msg
+    if pct is not None:
+        js.document.getElementById("b-progress").value = pct
+
+def on_file_b(event):
+    global _img_array_b
+    files = event.target.files
+    if files.length == 0:
+        return
+    reader = js.FileReader.new()
+    def on_load(e):
+        global _img_array_b
+        data = reader.result
+        b64 = data.split(",")[1]
+        raw = js.atob(b64)
+        ba = bytearray([ord(c) for c in raw])
+        img = Image.open(io.BytesIO(ba)).convert("RGB")
+        MAX = 300
+        w, h = img.size
+        if w > MAX or h > MAX:
+            f = MAX / max(w, h)
+            img = img.resize((int(w*f), int(h*f)), Image.LANCZOS)
+        _img_array_b = np.array(img)
+        img_b_canvas(_img_array_b, "b-canvas-orig")
+        set_status_b(f"Imagen cargada: {img.size[0]}x{img.size[1]} px", 0)
+        js.document.getElementById("b-btn-aplicar").disabled = False
+    reader.onloadend = create_proxy(on_load)
+    reader.readAsDataURL(files.item(0))
+
+def filtro_3x3(arr, iters):
+    res = arr.astype(np.float32).copy()
+    for _ in range(iters):
+        H, W, _ = res.shape
+        pad = np.pad(res, ((1,1),(1,1),(0,0)), mode="reflect")
+        sal = np.zeros_like(res)
+        for i in range(H):
+            for j in range(W):
+                sal[i,j,:] = np.mean(pad[i:i+3, j:j+3,:], axis=(0,1))
+        res = sal
+    return np.clip(res, 0, 255).astype(np.uint8)
+
+def aplicar():
+    global _img_array_b
+    if _img_array_b is None:
+        return
+
+    iters = 1
+    for rb in js.document.querySelectorAll("input[name='b-iter']"):
+        if rb.checked:
+            iters = int(rb.value)
+            break
+
+    set_status_b(f"Aplicando filtro — {iters} pasada(s)...", 0)
+    js.document.getElementById("b-btn-aplicar").disabled = True
+
+    suav = filtro_3x3(_img_array_b, iters)
+    diff = np.abs(_img_array_b.astype(np.int16) - suav.astype(np.int16))
+    diff5 = np.clip(diff * 5, 0, 255).astype(np.uint8)
+
+    img_b_canvas(_img_array_b, "b-canvas-orig")
+    img_b_canvas(suav, "b-canvas-suav")
+    img_b_canvas(diff5, "b-canvas-diff")
+
+    mse = float(np.mean(((_img_array_b.astype(np.float32) - suav.astype(np.float32))**2)))
+    mae = float(np.mean(np.abs(_img_array_b.astype(np.float32) - suav.astype(np.float32))))
+    psnr = (10 * math.log10(255**2 / mse)) if mse > 0 else float("inf")
+    pixmod = float(np.mean(diff.max(axis=2) > 5) * 100)
+
+    js.document.getElementById("b-mse").textContent    = f"{mse:.2f}"
+    js.document.getElementById("b-mae").textContent    = f"{mae:.2f}"
+    js.document.getElementById("b-psnr").textContent   = f"{psnr:.2f} dB" if psnr != float("inf") else "inf"
+    js.document.getElementById("b-pixmod").textContent = f"{pixmod:.1f}%"
+    js.document.getElementById("b-metrics").style.display = "flex"
+
+    set_status_b(f"Filtro aplicado — {iters} pasada(s)", 100)
+    js.document.getElementById("b-btn-aplicar").disabled = False
+
+# Vincular eventos y exponer función
+js.document.getElementById("b-file-input").addEventListener("change", create_proxy(on_file_b))
+js.window.aplicarFiltroPy = create_proxy(aplicar)
+</script>
+
+<!-- =============================================
+     JavaScript
+============================================= -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+<script>
+// =============================================
+// NAVEGACION
+// =============================================
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+function showTab(sec, tab, btn) {
+  document.querySelectorAll(`#sec-${sec} .tab-content`).forEach(t => t.classList.remove('active'));
+  document.querySelectorAll(`#sec-${sec} .tab-btn`).forEach(b => b.classList.remove('active'));
+  document.getElementById(`${sec}-tab-${tab}`).classList.add('active');
+  btn.classList.add('active');
+}
+
+// =============================================
+// CANVAS
+// =============================================
+function cargarImagenEnCanvas(canvasId, dataUrl, w, h) {
+  const wraps = {
+    'a-canvas-orig': 'a-canvas-orig-wrap',
+    'a-canvas-res':  'a-canvas-res-wrap',
+    'b-canvas-orig': 'b-canvas-orig-wrap',
+    'b-canvas-suav': 'b-canvas-suav-wrap',
+    'b-canvas-diff': 'b-canvas-diff-wrap',
+  };
+  const wrapId = wraps[canvasId];
+  if (!wrapId) return;
+
+  const wrap = document.getElementById(wrapId);
+  wrap.innerHTML = '';
+
+  const canvas = document.createElement('canvas');
+  canvas.id = canvasId;
+  canvas.width = w;
+  canvas.height = h;
+  canvas.style.maxWidth = '100%';
+  canvas.style.maxHeight = '280px';
+  wrap.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  img.onload = () => ctx.drawImage(img, 0, 0);
+  img.src = dataUrl;
+}
+
+// =============================================
+// CARGAR EJEMPLOS
+// =============================================
+function cargarEjemploA() {
+  const val = document.getElementById('a-ejemplo-select').value;
+  const path = `assets/images/ejemplo_${val}.jpg`;
+  document.getElementById('a-status').textContent = 'Cargando ejemplo...';
+
+  fetch(path)
+    .then(r => {
+      if (!r.ok) throw new Error('No encontrado');
+      return r.blob();
+    })
+    .then(blob => {
+      const file = new File([blob], `ejemplo_${val}.jpg`, { type: 'image/jpeg' });
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      const input = document.getElementById('a-file-input');
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change'));
+    })
+    .catch(() => {
+      document.getElementById('a-status').textContent = 'No se encontro la imagen de ejemplo.';
+    });
+}
+
+function cargarEjemploB() {
+  const val = document.getElementById('b-ejemplo-select').value;
+  const path = `assets/images/ejemplo_${val}.jpg`;
+  document.getElementById('b-status').textContent = 'Cargando ejemplo...';
+
+  fetch(path)
+    .then(r => {
+      if (!r.ok) throw new Error('No encontrado');
+      return r.blob();
+    })
+    .then(blob => {
+      const file = new File([blob], `ejemplo_${val}.jpg`, { type: 'image/jpeg' });
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      const input = document.getElementById('b-file-input');
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change'));
+    })
+    .catch(() => {
+      document.getElementById('b-status').textContent = 'No se encontro la imagen de ejemplo.';
+    });
+}
+
+// =============================================
+// COPIAR CODIGO
+// =============================================
+function copyCode(btn) {
+  const text = btn.parentElement.textContent.replace('copiar', '').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copiado!';
+    setTimeout(() => btn.textContent = 'copiar', 1800);
+  });
+}
+
+function copySourceCode(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector(`[onclick="copySourceCode('${id}')"]`);
+    const orig = btn.textContent;
+    btn.textContent = 'Copiado!';
+    setTimeout(() => btn.textContent = orig, 1800);
+  });
+}
+
+// =============================================
+// BOTONES DE EJECUCION
+// =============================================
+function clasificarTexturas() {
+  if (window.clasificarTexturasPy) {
+    window.clasificarTexturasPy();
+  } else {
+    console.log('Esperando a que PyScript cargue...');
+    setTimeout(clasificarTexturas, 500);
+  }
+}
+
+function aplicarFiltro() {
+  if (window.aplicarFiltroPy) {
+    window.aplicarFiltroPy();
+  } else {
+    console.log('Esperando a que PyScript cargue...');
+    setTimeout(aplicarFiltro, 500);
+  }
+}
+</script>
+
 </body>
 </html>
