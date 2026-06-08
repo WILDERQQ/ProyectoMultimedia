@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro de Suavizado - Wilder</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="tk-window-mockup" style="margin: 0; width: 100%; min-height: 100vh; max-width: none; border: none; box-shadow: none; border-radius: 0;">
+        <div class="tk-titlebar">
+            <div class="tk-titlebar-text">Filtro de Suavizado (Promedio 3x3) - Procesamiento a nivel de píxel</div>
+            <div class="tk-titlebar-buttons">
+                <span class="tk-title-btn tk-title-btn-min"></span>
+                <span class="tk-title-btn tk-title-btn-max"></span>
+                <span class="tk-title-btn tk-title-btn-close"></span>
+            </div>
+        </div>
+        
+        <div class="tk-content">
+            <fieldset class="tk-labelframe">
+                <legend class="tk-legend"> Panel de Control y Configuración </legend>
+                <div class="tk-labelframe-content" style="display: flex; gap: 15px; align-items: center;">
+                    <input type="file" id="uploadInput" accept="image/png, image/jpeg" style="display: none;">
+                    
+                    <button class="tk-button" style="background: #4CAF50; color: white;" onclick="document.getElementById('uploadInput').click()">📁 1. Cargar Imagen</button>
+                    <button class="tk-button" style="background: #2196F3; color: white;" onclick="procesarImagen()">🖼️ 2. Aplicar Filtro 3x3</button>
+                    
+                    <span id="statusText" style="font-weight: bold; color: #555;">Esperando imagen...</span>
+                </div>
+            </fieldset>
+
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 20px;">
+                <fieldset class="tk-labelframe" style="flex: 1; text-align: center; background-color: white;">
+                    <legend class="tk-legend"> ANTES (Imagen Original) </legend>
+                    <canvas id="canvasAntes" width="450" height="450" style="background: #e0e0e0; max-width: 100%; border: 1px solid #ccc;"></canvas>
+                </fieldset>
+                
+                <fieldset class="tk-labelframe" style="flex: 1; text-align: center; background-color: white;">
+                    <legend class="tk-legend"> DESPUÉS (Resultado Suavizado) </legend>
+                    <canvas id="canvasDespues" width="450" height="450" style="background: #e0e0e0; max-width: 100%; border: 1px solid #ccc;"></canvas>
+                </fieldset>
+            </div>
+
+            <fieldset class="tk-labelframe" style="margin-top: 20px; background-color: white;">
+                <legend class="tk-legend" style="font-weight: bold;"> Información del Algoritmo </legend>
+                <div style="text-align: center; padding: 10px; color: #333; font-size: 14px;">
+                    <strong>¿Cómo funciona este filtro de suavizado?</strong><br><br>
+                    El algoritmo recorre la imagen tomando ventanas de 3x3 píxeles.<br>
+                    Calcula el color promedio de esos 9 píxeles y se lo asigna al píxel central, reduciendo así el ruido visual.
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+
+    <script>
+        const canvasAntes = document.getElementById('canvasAntes');
+        const ctxAntes = canvasAntes.getContext('2d', { willReadFrequently: true });
+        
+        const canvasDespues = document.getElementById('canvasDespues');
+        const ctxDespues = canvasDespues.getContext('2d');
+        
+        const statusText = document.getElementById('statusText');
+        let imagenCargada = false;
+
+        // 1. Cargar la imagen y ajustarla al Canvas
+        document.getElementById('uploadInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const img = new Image();
+            img.onload = function() {
+                ctxAntes.clearRect(0, 0, canvasAntes.width, canvasAntes.height);
+                ctxDespues.clearRect(0, 0, canvasDespues.width, canvasDespues.height);
+
+                ctxAntes.drawImage(img, 0, 0, canvasAntes.width, canvasAntes.height);
+                imagenCargada = true;
+                statusText.innerText = "Imagen cargada. Lista para procesar.";
+            }
+            img.src = URL.createObjectURL(file);
+        });
+
+        // 2. Procesamiento a nivel de píxel (Filtro Promedio 3x3)
+        function procesarImagen() {
+            if (!imagenCargada) {
+                alert("Primero debes cargar una imagen.");
+                return;
+            }
+
+            statusText.innerText = "Aplicando filtro de promedio... (Puede tardar unos segundos)";
+            
+            setTimeout(() => {
+                const width = canvasAntes.width;
+                const height = canvasAntes.height;
+                
+                const imgData = ctxAntes.getImageData(0, 0, width, height);
+                const src = imgData.data; 
+                
+                const outData = ctxDespues.createImageData(width, height);
+                const dst = outData.data;
+
+                // Copiamos la imagen original al lienzo de resultado.
+                // Equivale a "resultado = np.copy(img_array)" en tu código Python,
+                // para que los bordes que no se procesan mantengan su color original en lugar de verse negros.
+                dst.set(src);
+
+                // offset = 1 crea exactamente una ventana de 3x3 (1 píxel a cada lado del centro)
+                const offset = 1;
+
+                // Recorremos la imagen exceptuando los bordes
+                for (let y = offset; y < height - offset; y++) {
+                    for (let x = offset; x < width - offset; x++) {
+                        
+                        let sumR = 0, sumG = 0, sumB = 0;
+
+                        // Extraemos la ventana de 3x3 píxeles
+                        for (let wy = -1; wy <= 1; wy++) {
+                            for (let wx = -1; wx <= 1; wx++) {
+                                let px = x + wx;
+                                let py = y + wy;
+                                
+                                let idx = (py * width + px) * 4; 
+                                
+                                sumR += src[idx];     // Rojo
+                                sumG += src[idx+1];   // Verde
+                                sumB += src[idx+2];   // Azul
+                            }
+                        }
+
+                        // Promediamos dividiendo la suma entre los 9 píxeles de la ventana
+                        let R = sumR / 9;
+                        let G = sumG / 9;
+                        let B = sumB / 9;
+
+                        // Asignamos el nuevo color promediado al píxel central
+                        let outIdx = (y * width + x) * 4;
+                        dst[outIdx] = R;       
+                        dst[outIdx+1] = G;     
+                        dst[outIdx+2] = B;     
+                        dst[outIdx+3] = 255;  // Mantener la opacidad
+                    }
+                }
+
+                // Dibujar el resultado en el canvas de la derecha
+                ctxDespues.putImageData(outData, 0, 0);
+                statusText.innerText = "¡Filtro aplicado correctamente!";
+            }, 100); 
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Clasificación de Texturas - Wilder</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div class="tk-window-mockup" style="margin: 0; width: 100%; min-height: 100vh; max-width: none; border: none; box-shadow: none; border-radius: 0;">
+        <div class="tk-titlebar">
+            <div class="tk-titlebar-text">Sistema de Clasificación de Texturas (Píxel por Píxel)</div>
+            <div class="tk-titlebar-buttons">
+                <span class="tk-title-btn tk-title-btn-min"></span>
+                <span class="tk-title-btn tk-title-btn-max"></span>
+                <span class="tk-title-btn tk-title-btn-close"></span>
+            </div>
+        </div>
+        
+        <div class="tk-content">
+            <fieldset class="tk-labelframe">
+                <legend class="tk-legend"> Panel de Control y Configuración </legend>
+                <div class="tk-labelframe-content" style="display: flex; gap: 15px; align-items: center;">
+                    <input type="file" id="uploadInput" accept="image/png, image/jpeg" style="display: none;">
+                    
+                    <button class="tk-button" style="background: #4CAF50; color: white;" onclick="document.getElementById('uploadInput').click()">📁 1. Cargar Imagen</button>
+                    <button class="tk-button" style="background: #9C27B0; color: white;" onclick="procesarImagen()">📊 2. Procesar Texturas (Algoritmo 3x3)</button>
+                    
+                    <span id="statusText" style="font-weight: bold; color: #555;">Esperando imagen...</span>
+                </div>
+            </fieldset>
+
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 20px;">
+                <fieldset class="tk-labelframe" style="flex: 1; text-align: center; background-color: white;">
+                    <legend class="tk-legend"> ANTES (Imagen Original) </legend>
+                    <canvas id="canvasAntes" width="450" height="450" style="background: #e0e0e0; max-width: 100%; border: 1px solid #ccc;"></canvas>
+                </fieldset>
+                
+                <fieldset class="tk-labelframe" style="flex: 1; text-align: center; background-color: white;">
+                    <legend class="tk-legend"> DESPUÉS (Resultado del Análisis) </legend>
+                    <canvas id="canvasDespues" width="450" height="450" style="background: #e0e0e0; max-width: 100%; border: 1px solid #ccc;"></canvas>
+                </fieldset>
+            </div>
+
+            <fieldset class="tk-labelframe" style="margin-top: 20px; background-color: white;">
+                <legend class="tk-legend" style="font-weight: bold;"> Leyenda de Clasificación </legend>
+                <div style="display: flex; justify-content: center; gap: 40px; padding: 10px 0;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 30px; height: 15px; background-color: #00FF00; border: 1px solid #000;"></div>
+                        <span style="font-weight: bold; color: #333;">Césped</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 30px; height: 15px; background-color: #8B4513; border: 1px solid #000;"></div>
+                        <span style="font-weight: bold; color: #333;">Tierra</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 30px; height: 15px; background-color: #B4B4B4; border: 1px solid #000;"></div>
+                        <span style="font-weight: bold; color: #333;">Cemento</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 30px; height: 15px; background-color: #323232; border: 1px solid #000;"></div>
+                        <span style="font-weight: bold; color: #333;">Asfalto / Otros</span>
+                    </div>
+                </div>
+            </fieldset>
+
+        </div>
+    </div>
+
+    <script>
+        const canvasAntes = document.getElementById('canvasAntes');
+        const ctxAntes = canvasAntes.getContext('2d', { willReadFrequently: true });
+        
+        const canvasDespues = document.getElementById('canvasDespues');
+        const ctxDespues = canvasDespues.getContext('2d');
+        
+        const statusText = document.getElementById('statusText');
+        let imagenCargada = false;
+
+        document.getElementById('uploadInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const img = new Image();
+            img.onload = function() {
+                ctxAntes.clearRect(0, 0, canvasAntes.width, canvasAntes.height);
+                ctxDespues.clearRect(0, 0, canvasDespues.width, canvasDespues.height);
+
+                ctxAntes.drawImage(img, 0, 0, canvasAntes.width, canvasAntes.height);
+                imagenCargada = true;
+                statusText.innerText = "Imagen cargada. Lista para procesar.";
+            }
+            img.src = URL.createObjectURL(file);
+        });
+
+        function procesarImagen() {
+            if (!imagenCargada) {
+                alert("Primero debes cargar una imagen.");
+                return;
+            }
+
+            statusText.innerText = "Procesando píxel por píxel... (Puede tardar unos segundos)";
+            
+            setTimeout(() => {
+                const width = canvasAntes.width;
+                const height = canvasAntes.height;
+                
+                const imgData = ctxAntes.getImageData(0, 0, width, height);
+                const src = imgData.data; 
+                
+                const outData = ctxDespues.createImageData(width, height);
+                const dst = outData.data;
+
+                const offset = 1;
+
+                for (let y = offset; y < height - offset; y++) {
+                    for (let x = offset; x < width - offset; x++) {
+                        
+                        let sumR = 0, sumG = 0, sumB = 0;
+                        let grises = [];
+
+                        for (let wy = -1; wy <= 1; wy++) {
+                            for (let wx = -1; wx <= 1; wx++) {
+                                let px = x + wx;
+                                let py = y + wy;
+                                
+                                let idx = (py * width + px) * 4; 
+                                
+                                let r = src[idx];
+                                let g = src[idx+1];
+                                let b = src[idx+2];
+
+                                sumR += r;
+                                sumG += g;
+                                sumB += b;
+
+                                grises.push((r + g + b) / 3);
+                            }
+                        }
+
+                        let R = sumR / 9;
+                        let G = sumG / 9;
+                        let B = sumB / 9;
+
+                        let sumaGrises = 0;
+                        for(let i=0; i<9; i++) sumaGrises += grises[i];
+                        let mediaGris = sumaGrises / 9;
+                        
+                        let sumaVarianza = 0;
+                        for(let i=0; i<9; i++) {
+                            sumaVarianza += Math.pow(grises[i] - mediaGris, 2);
+                        }
+                        let varianza = sumaVarianza / 9;
+
+                        // TUS REGLAS DE COLORES (Que ahora coinciden con la leyenda visual)
+                        let finalR, finalG, finalB;
+
+                        if (G > R && G > B && varianza > 30) {
+                            finalR = 0; finalG = 255; finalB = 0;        
+                        } else if (R > G && R > 80 && varianza > 50) {
+                            finalR = 139; finalG = 69; finalB = 19;      
+                        } else if (varianza < 20 && (R < 180 && G < 180 && B < 180)) {
+                            finalR = 180; finalG = 180; finalB = 180;    
+                        } else {
+                            finalR = 50; finalG = 50; finalB = 50;       
+                        }
+
+                        let outIdx = (y * width + x) * 4;
+                        dst[outIdx] = finalR;       
+                        dst[outIdx+1] = finalG;     
+                        dst[outIdx+2] = finalB;     
+                        dst[outIdx+3] = 255; 
+                    }
+                }
+
+                ctxDespues.putImageData(outData, 0, 0);
+                statusText.innerText = "¡Procesamiento finalizado!";
+            }, 100); 
+        }
+    </script>
+</body>
+</html>

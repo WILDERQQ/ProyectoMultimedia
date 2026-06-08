@@ -1,0 +1,769 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+/* Reset & Variables */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-main: #06060f;
+    --bg-card: rgba(13, 13, 33, 0.7);
+    --bg-header: rgba(8, 8, 24, 0.8);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --accent-indigo: #8b5cf6;
+    --accent-teal: #06b6d4;
+    --accent-pink: #d946ef;
+    
+    --text-title: #ffffff;
+    --text-body: #cbd5e1;
+    --text-muted: #64748b;
+    
+    --glow-indigo: rgba(139, 92, 246, 0.25);
+    
+    /* Tkinter simulated variables */
+    --tk-win-bg: #f5f5f5;
+    --tk-titlebar-bg: #e1e1e1;
+    --tk-titlebar-btn-close: #ff5f56;
+    --tk-titlebar-btn-max: #ffbd2e;
+    --tk-titlebar-btn-min: #27c93f;
+    --tk-text-color: #333333;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-main);
+    background-image: 
+        radial-gradient(at 10% 10%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+    color: var(--text-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* Header styling */
+header {
+    background-color: var(--bg-header);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-logo h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header-logo p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 0.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+}
+
+.header-info {
+    text-align: right;
+}
+
+.header-info .student-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-title);
+    background: linear-gradient(to right, #ffffff, #cbd5e1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header-info .student-tag {
+    font-size: 0.8rem;
+    color: var(--accent-teal);
+    font-weight: 500;
+}
+
+/* Layout */
+main {
+    max-width: 1400px;
+    width: 100%;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.sidebar-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    padding-left: 0.5rem;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.nav-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-decoration: none;
+    color: var(--text-body);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 4px 20px var(--glow-indigo);
+    transform: translateY(-2px);
+}
+
+.nav-item.active {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(6, 182, 212, 0.05));
+    border-color: var(--accent-indigo);
+    box-shadow: 0 0 25px var(--glow-indigo);
+}
+
+.nav-item-title {
+    font-weight: 700;
+    color: var(--text-title);
+    font-size: 1.05rem;
+}
+
+.nav-item-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.3;
+}
+
+/* Content Container */
+.content-area {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 650px;
+}
+
+/* Content Header */
+.content-area-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.01);
+}
+
+.content-area-header h2 {
+    color: var(--text-title);
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.btn-download-top {
+    background: linear-gradient(135deg, var(--accent-indigo), rgba(139, 92, 246, 0.8));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 600;
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.btn-download-top:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.5);
+}
+
+/* Tabs Controller */
+.tabs-nav {
+    display: flex;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 1rem;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    color: var(--text-body);
+}
+
+.tab-btn.active {
+    color: var(--accent-teal);
+    border-bottom-color: var(--accent-teal);
+}
+
+/* Tab contents */
+.tab-content {
+    display: none;
+    padding: 2rem;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.tab-content.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Code View Panel */
+#code-tab {
+    padding: 1.5rem;
+}
+
+.code-wrapper {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.25rem;
+    max-height: 520px;
+    overflow: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+}
+
+#code-display {
+    white-space: pre;
+}
+
+/* Setup Guide Panel */
+.setup-guide-box {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.setup-step {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.setup-step h4 {
+    color: var(--text-title);
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.step-num {
+    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-teal));
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.setup-step p {
+    color: var(--text-body);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.terminal-box {
+    background: #010103;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.terminal-text {
+    color: #34d399; /* Green text */
+}
+
+.btn-copy {
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: var(--text-body);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.btn-copy:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+/* Pyodide Loader Overlay styles */
+.pyodide-start-overlay {
+    text-align: center;
+    max-width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 2rem;
+}
+
+.pyodide-start-overlay h3 {
+    font-size: 1.5rem;
+    color: var(--text-title);
+}
+
+.pyodide-warning {
+    background: rgba(234, 179, 8, 0.1);
+    border: 1px solid rgba(234, 179, 8, 0.2);
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.85rem;
+    color: #fef08a;
+    line-height: 1.4;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-indigo), var(--accent-teal));
+    color: white;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 1.8rem;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(139, 92, 246, 0.6);
+}
+
+/* Loading box inside simulation */
+.pyodide-loading-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 450px;
+    margin: auto;
+    gap: 1.5rem;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(139, 92, 246, 0.1);
+    border-top: 4px solid var(--accent-teal);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-indigo), var(--accent-teal));
+    transition: width 0.4s ease;
+}
+
+.loading-steps {
+    list-style: none;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.loading-steps li {
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.loading-steps li.pending {
+    color: var(--text-muted);
+}
+
+.loading-steps li.done {
+    color: #34d399; /* emerald green */
+    font-weight: 500;
+}
+
+/* Error box */
+.pyodide-error-box {
+    text-align: center;
+    max-width: 500px;
+    margin: auto;
+    padding: 2rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pyodide-error-box h4 {
+    color: #fca5a5;
+    font-size: 1.2rem;
+}
+
+.error-log {
+    background: #000;
+    color: #f87171;
+    font-family: monospace;
+    font-size: 0.8rem;
+    padding: 0.8rem;
+    border-radius: 6px;
+    width: 100%;
+    max-height: 120px;
+    overflow: auto;
+    text-align: left;
+}
+
+/* Status mini */
+.pyodide-status-mini {
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--accent-teal);
+    font-weight: 500;
+}
+
+.btn-small-stop {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-body);
+    font-family: inherit;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    cursor: pointer;
+}
+
+.btn-small-stop:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #f87171;
+}
+
+.tk-empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 400px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* ==========================================
+   TKINTER WEB SIMULATOR (HIGH-FIDELITY WINDOWS MOCK)
+   ========================================== */
+.tk-window-mockup {
+    margin: 1.5rem auto;
+    width: 100%;
+    max-width: 960px;
+    background: var(--tk-win-bg);
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    border: 1px solid var(--tk-border);
+    display: flex;
+    flex-direction: column;
+}
+
+/* OS Window Titlebar */
+.tk-titlebar {
+    background: var(--tk-titlebar-bg);
+    padding: 0.6rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #d0d0d0;
+    user-select: none;
+}
+
+.tk-titlebar-text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--tk-text-color);
+}
+
+.tk-titlebar-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.tk-title-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.tk-title-btn-close { background-color: var(--tk-titlebar-btn-close); }
+.tk-title-btn-max { background-color: var(--tk-titlebar-btn-max); }
+.tk-title-btn-min { background-color: var(--tk-titlebar-btn-min); }
+
+/* Tkinter content pane */
+.tk-content {
+    padding: 15px;
+    min-height: 520px;
+    color: var(--tk-text-color);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tkinter Labelframes (styled as fieldsets) */
+.tk-labelframe {
+    border: 1px solid #c0c0c0;
+    border-radius: 4px;
+    padding: 10px 15px 15px 15px;
+    margin-bottom: 12px;
+    background-color: var(--tk-win-bg);
+}
+
+.tk-legend {
+    font-weight: bold;
+    font-size: 0.85rem;
+    padding: 0 5px;
+    color: #333;
+}
+
+.tk-labelframe-content {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Tkinter Buttons */
+.tk-button {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 0.85rem;
+    border: 1px solid #acacac;
+    border-radius: 3px;
+    background: linear-gradient(to bottom, #fcfcfc, #f0f0f0);
+    color: #333;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.1s;
+    outline: none;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.tk-button:hover {
+    background: linear-gradient(to bottom, #f0f0f0, #e4e4e4);
+    border-color: #7a7a7a;
+}
+
+.tk-button:active {
+    background: #e4e4e4;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.tk-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #e1e1e1;
+    color: #888;
+}
+
+/* Custom Tkinter Separator */
+.tk-separator {
+    background-color: #d0d0d0;
+}
+
+.tk-separator-vertical {
+    width: 1px;
+    height: 25px;
+    margin: 0 10px;
+}
+
+.tk-separator-horizontal {
+    height: 1px;
+    width: 100%;
+    margin: 10px 0;
+}
+
+/* Combobox (HTML Select) */
+.tk-combobox {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 0.85rem;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
+    padding: 3px 5px;
+    background: white;
+    color: black;
+    outline: none;
+    min-width: 150px;
+}
+
+/* Labels */
+.tk-label {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 0.85rem;
+    margin-right: 5px;
+}
+
+/* Image container Label styling */
+.tk-image-container {
+    width: 100%;
+    min-height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #cccccc;
+    background-color: #ffffff;
+    overflow: hidden;
+    color: #888888;
+}
+
+.tk-label-img {
+    max-width: 100%;
+    max-height: 380px;
+    display: block;
+    object-fit: contain;
+}
+
+/* Custom layout helper frames */
+.tk-frame {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+}
+
+/* Exception box */
+.py-traceback-box {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 4px;
+    margin-top: 15px;
+    font-family: monospace;
+    font-size: 0.85rem;
+}
+
+.py-traceback-box h5 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    font-family: sans-serif;
+}
+
+.py-traceback-box pre {
+    white-space: pre-wrap;
+    overflow-x: auto;
+}
+
+/* Footer */
+footer {
+    border-top: 1px solid var(--border-color);
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background-color: rgba(0, 0, 0, 0.2);
+    margin-top: auto;
+}
+
+/* Animations */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+}
