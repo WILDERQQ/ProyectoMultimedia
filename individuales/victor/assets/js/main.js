@@ -71,6 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
         projectTitle.innerText = data.title;
         currentProject = projectId;
         
+        // Reset defaults that might have been changed
+        document.getElementById('tab-btn-execute').innerText = '🚀 Ver ejecución en web -';
+        const downloadBtn = document.getElementById('btn-download-top-action');
+        if (downloadBtn) downloadBtn.style.display = 'inline-block';
+
         // Always reset to code tab on project change to avoid confusion (fixing the bug the user reported)
         if (data.isPython) {
             switchTab('code');
@@ -82,12 +87,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // For Vacalola & PDF, show "Ver ejecucion en web" immediately, hide Code/Setup if not applicable
             switchTab('execute');
             document.getElementById('tab-btn-code').style.display = 'none';
+            document.getElementById('tab-btn-setup').style.display = 'none';
+            
             if (projectId === 'documentacion') {
-                document.getElementById('tab-btn-setup').style.display = 'inline-block';
-                setupStepDeps.style.display = 'none';
-                setupStepRun.style.display = 'none';
-            } else {
-                document.getElementById('tab-btn-setup').style.display = 'none';
+                document.getElementById('tab-btn-execute').innerText = '👀 Ver';
+                if (downloadBtn) downloadBtn.style.display = 'none';
             }
         }
 
