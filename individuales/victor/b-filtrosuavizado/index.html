@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filtro de Suavizado</title>
+    <title>Filtro de Suavizado </title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <style>
         body {
@@ -39,7 +39,7 @@
 <body>
     <div class="tk-window-mockup" style="margin: 0; width: 100%; height: 100vh; max-width: none; border: none; box-shadow: none; border-radius: 0;">
         <div class="tk-titlebar">
-            <div class="tk-titlebar-text">Filtro de Suavizado y Detección de Bordes</div>
+            <div class="tk-titlebar-text">Filtro de Suavizado y Detección de Bordes (Matricial)</div>
             <div class="tk-titlebar-buttons">
                 <span class="tk-title-btn tk-title-btn-min"></span>
                 <span class="tk-title-btn tk-title-btn-max"></span>
@@ -53,15 +53,15 @@
                 <div class="tk-labelframe-content tk-controls-row">
                     <button class="tk-button" id="btn-cargar" style="background: #4CAF50; color: white; font-weight: bold;">📁 Cargar Imagen</button>
                     <input type="file" id="file-input" accept="image/*" style="display: none;">
-
+                    
                     <div class="tk-separator tk-separator-vertical"></div>
-
+                    
                     <span class="tk-label-inline">Operación:</span>
                     <select class="tk-select" id="combo-operacion">
-                       <!-- <option value="solo">Solo Suavizado (Gaussiano 3x3)</option> -->
-                        <option value="bordes" selected>Suavizado + Detección de Bordes (Canny)</option>
+                        <option value="solo">Solo Suavizado (Gaussiano 3x3)</option>
+                        <option value="bordes" selected>Suavizado + Detección de Bordes (Sobel 3x3)</option>
                     </select>
-
+                    
                     <button class="tk-button" id="btn-filtrar" style="background: #009688; color: white; font-weight: bold;">✨ Aplicar Algoritmo</button>
                 </div>
             </fieldset>
@@ -80,7 +80,7 @@
             </div>
         </div>
     </div>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const btnCargar   = document.getElementById('btn-cargar');
@@ -93,7 +93,9 @@
             let originalImage = null;
 
             // --- Cargar Imagen ---
-            btnCargar.addEventListener('click', () => fileInput.click());
+            btnCargar.addEventListener('click', () => {
+                fileInput.click();
+            });
 
             fileInput.addEventListener('change', (e) => {
                 if (e.target.files && e.target.files[0]) {
@@ -101,11 +103,12 @@
                     reader.onload = function(event) {
                         const img = new Image();
                         img.onload = function() {
-                            // Resize to 420x420 like Python does: cv2.resize(img, (420,420))
+                            // Redimensionar a 420x420 al igual que hace Python con cv2.resize
                             const canvas = document.createElement('canvas');
                             canvas.width = 420;
                             canvas.height = 420;
-                            canvas.getContext('2d').drawImage(img, 0, 0, 420, 420);
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, 420, 420);
                             
                             const resized = new Image();
                             resized.onload = function() {
@@ -115,6 +118,7 @@
                                 displayImg.src = resized.src;
                                 displayImg.className = 'tk-label-img';
                                 lblAntes.appendChild(displayImg);
+                                
                                 lblDespues.innerHTML = 'Esperando procesamiento...';
                             };
                             resized.src = canvas.toDataURL();
@@ -125,183 +129,125 @@
                 }
             });
 
-            // --- Aplicar Algoritmo ---
+            // --- Kernels explícitos ---
+            const kernelGauss = [
+                1/16, 2/16, 1/16,
+                2/16, 4/16, 2/16,
+                1/16, 2/16, 1/16
+            ];
+
+            const kernelSobelX = [
+                -1, 0, 1,
+                -2, 0, 2,
+                -1, 0, 1
+            ];
+
+            const kernelSobelY = [
+                -1, -2, -1,
+                 0,  0,  0,
+                 1,  2,  1
+            ];
+
+            // --- Convolución explícita de 3x3 ---
+            // Deja las fronteras exteriores (1px) en 0 como hace Python
+            function convolucion3x3(srcChannel, kernel, w, h) {
+                const dstChannel = new Float32Array(w * h); // inicializado a 0
+                for (let y = 1; y < h - 1; y++) {
+                    for (let x = 1; x < w - 1; x++) {
+                        let val = 0;
+                        for (let ky = 0; ky < 3; ky++) {
+                            for (let kx = 0; kx < 3; kx++) {
+                                const py = y - 1 + ky;
+                                const px = x - 1 + kx;
+                                val += srcChannel[py * w + px] * kernel[ky * 3 + kx];
+                            }
+                        }
+                        dstChannel[y * w + x] = val;
+                    }
+                }
+                return dstChannel;
+            }
+
+            // --- Procesamiento de imagen ---
             btnFiltrar.addEventListener('click', () => {
                 if (!originalImage) return;
 
                 const seleccion = comboOp.value;
 
-                // PASO 1: Suavizado Gaussiano 3x3 (obligatorio en ambos casos)
-                const suavizada = aplicarGaussiano3x3(originalImage);
+                // Crear canvas temporal para leer los píxeles
+                const canvas = document.createElement('canvas');
+                canvas.width = originalImage.width;
+                canvas.height = originalImage.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(originalImage, 0, 0);
 
-                let resultado;
-                if (seleccion === 'bordes') {
-                    // PASO 2: Detección de bordes Canny (threshold 50 / 150)
-                    resultado = aplicarCanny(suavizada, 50, 150);
-                } else {
-                    resultado = suavizada;
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                const w = canvas.width;
+                const h = canvas.height;
+
+                // Extraer canales de color individuales
+                const rChan = new Float32Array(w * h);
+                const gChan = new Float32Array(w * h);
+                const bChan = new Float32Array(w * h);
+
+                for (let i = 0; i < w * h; i++) {
+                    rChan[i] = data[i * 4];
+                    gChan[i] = data[i * 4 + 1];
+                    bChan[i] = data[i * 4 + 2];
                 }
 
+                // PASO 1: Suavizado Gaussiano Matricial
+                const rSmooth = convolucion3x3(rChan, kernelGauss, w, h);
+                const gSmooth = convolucion3x3(gChan, kernelGauss, w, h);
+                const bSmooth = convolucion3x3(bChan, kernelGauss, w, h);
+
+                // Preparar imagen final
+                const finalImageData = ctx.createImageData(w, h);
+                const outData = finalImageData.data;
+
+                // PASO 2: Selección de Algoritmo
+                if (seleccion === 'bordes') {
+                    // Conversión manual a escala de grises usando pesos de luminancia OpenCV/estándar:
+                    // img_gris = 0.299 * R + 0.587 * G + 0.114 * B
+                    const grayChan = new Float32Array(w * h);
+                    for (let i = 0; i < w * h; i++) {
+                        grayChan[i] = 0.299 * rSmooth[i] + 0.587 * gSmooth[i] + 0.114 * bSmooth[i];
+                    }
+
+                    // Aplicar Sobel X e Y
+                    const gx = convolucion3x3(grayChan, kernelSobelX, w, h);
+                    const gy = convolucion3x3(grayChan, kernelSobelY, w, h);
+
+                    // Calcular magnitud: sqrt(Gx^2 + Gy^2)
+                    for (let i = 0; i < w * h; i++) {
+                        const mag = Math.sqrt(gx[i] * gx[i] + gy[i] * gy[i]);
+                        const val = Math.min(Math.max(mag, 0), 255);
+                        
+                        outData[i * 4]     = val; // R
+                        outData[i * 4 + 1] = val; // G
+                        outData[i * 4 + 2] = val; // B
+                        outData[i * 4 + 3] = 255; // Alpha
+                    }
+                } else {
+                    // Solo suavizado: mezclar los canales suavizados de nuevo
+                    for (let i = 0; i < w * h; i++) {
+                        outData[i * 4]     = Math.min(Math.max(rSmooth[i], 0), 255);
+                        outData[i * 4 + 1] = Math.min(Math.max(gSmooth[i], 0), 255);
+                        outData[i * 4 + 2] = Math.min(Math.max(bSmooth[i], 0), 255);
+                        outData[i * 4 + 3] = 255; // Alpha (píxeles de borde tendrán color negro debido a la inicialización a 0)
+                    }
+                }
+
+                ctx.putImageData(finalImageData, 0, 0);
+
+                // Mostrar el resultado procesado
                 lblDespues.innerHTML = '';
                 const displayImg = document.createElement('img');
-                displayImg.src = resultado;
+                displayImg.src = canvas.toDataURL();
                 displayImg.className = 'tk-label-img';
                 lblDespues.appendChild(displayImg);
             });
-
-            // =========================================================
-            // PASO 1: Filtro Gaussiano 3x3 (kernel igual al de OpenCV)
-            // kernel = [[1,2,1],[2,4,2],[1,2,1]], weight = 16
-            // =========================================================
-            function aplicarGaussiano3x3(imgEl) {
-                const canvas = document.createElement('canvas');
-                canvas.width  = imgEl.width;
-                canvas.height = imgEl.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(imgEl, 0, 0);
-
-                const src = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const dst = ctx.createImageData(canvas.width, canvas.height);
-                const s = src.data, d = dst.data;
-                const w = canvas.width, h = canvas.height;
-
-                const kernel = [1,2,1, 2,4,2, 1,2,1];
-                const kWeight = 16;
-
-                for (let y = 0; y < h; y++) {
-                    for (let x = 0; x < w; x++) {
-                        let r = 0, g = 0, b = 0;
-                        for (let ky = -1; ky <= 1; ky++) {
-                            for (let kx = -1; kx <= 1; kx++) {
-                                let nx = Math.min(Math.max(x + kx, 0), w - 1);
-                                let ny = Math.min(Math.max(y + ky, 0), h - 1);
-                                  let ni = (ny * w + nx) * 4;
-                                let k  = kernel[(ky + 1) * 3 + (kx + 1)];
-                                r += s[ni]     * k;
-                                g += s[ni + 1] * k;
-                                b += s[ni + 2] * k;
-                            }
-                        }
-                        let i = (y * w + x) * 4;
-                        d[i]     = r / kWeight;
-                        d[i + 1] = g / kWeight;
-                        d[i + 2] = b / kWeight;
-                        d[i + 3] = s[i + 3];
-                    }
-                }
-                ctx.putImageData(dst, 0, 0);
-                return canvas.toDataURL();
-            }
-
-            // =========================================================
-            // PASO 2: Canny Edge Detection (threshold1=50, threshold2=150)
-            // Aproximación: escala de grises → Sobel → NMS → Hysteresis
-            // =========================================================
-            function aplicarCanny(dataUrl, tLow, tHigh) {
-                // Cargar la imagen suavizada en un canvas
-                const tmpImg = new Image();
-                // Usar un canvas temporal sincrónico
-                const tmpCanvas = document.createElement('canvas');
-
-                // Necesitamos trabajar con los píxeles directamente
-                // Creamos un canvas offscreen
-                const offCanvas = document.createElement('canvas');
-                const offCtx = offCanvas.getContext('2d');
-
-                // Para hacerlo sincrónico, usamos un truco: crear imagen y dibujar
-                const helperImg = document.createElement('img');
-                helperImg.src = dataUrl;
-
-                offCanvas.width  = helperImg.width;
-                offCanvas.height = helperImg.height;
-                offCtx.drawImage(helperImg, 0, 0);
-
-                const w = offCanvas.width, h = offCanvas.height;
-                const src = offCtx.getImageData(0, 0, w, h).data;
-
-                // Paso A: Escala de grises
-                const gray = new Float32Array(w * h);
-                for (let i = 0; i < w * h; i++) {
-                    gray[i] = 0.299 * src[i*4] + 0.587 * src[i*4+1] + 0.114 * src[i*4+2];
-                }
-
-                // Paso B: Sobel X e Y
-                const gx = new Float32Array(w * h);
-                const gy = new Float32Array(w * h);
-                const mag = new Float32Array(w * h);
-                const ang = new Float32Array(w * h);
-
-                const sobelX = [-1,0,1, -2,0,2, -1,0,1];
-                const sobelY = [-1,-2,-1, 0,0,0, 1,2,1];
-
-                for (let y = 0; y < h; y++) {
-                    for (let x = 0; x < w; x++) {
-                        let sx = 0, sy = 0;
-                        for (let ky = -1; ky <= 1; ky++) {
-                            for (let kx = -1; kx <= 1; kx++) {
-                                let nx = Math.min(Math.max(x+kx, 0), w-1);
-                                let ny = Math.min(Math.max(y+ky, 0), h-1);
-                                let k  = (ky+1)*3+(kx+1);
-                                sx += gray[ny*w+nx] * sobelX[k];
-                                sy += gray[ny*w+nx] * sobelY[k];
-                            }
-                        }
-                        let idx = y*w+x;
-                        gx[idx] = sx; gy[idx] = sy;
-                        mag[idx] = Math.sqrt(sx*sx + sy*sy);
-                        ang[idx] = Math.atan2(sy, sx) * 180 / Math.PI;
-                        if (ang[idx] < 0) ang[idx] += 180;
-                    }
-                }
-
-                // Paso C: Non-Maximum Suppression
-                const nms = new Float32Array(w * h);
-                for (let y = 1; y < h-1; y++) {
-                    for (let x = 1; x < w-1; x++) {
-                        let idx = y*w+x;
-                        let a = ang[idx];
-                        let m = mag[idx];
-                        let q = 255, r = 255;
-                        if ((a >= 0 && a < 22.5) || (a >= 157.5 && a <= 180)) {
-                            q = mag[y*w+(x+1)]; r = mag[y*w+(x-1)];
-                        } else if (a >= 22.5 && a < 67.5) {
-                            q = mag[(y+1)*w+(x-1)]; r = mag[(y-1)*w+(x+1)];
-                        } else if (a >= 67.5 && a < 112.5) {
-                            q = mag[(y+1)*w+x]; r = mag[(y-1)*w+x];
-                        } else {
-                            q = mag[(y-1)*w+(x-1)]; r = mag[(y+1)*w+(x+1)];
-                        }
-                        nms[idx] = (m >= q && m >= r) ? m : 0;
-                    }
-                }
-
-                // Paso D: Hysteresis Thresholding
-                const out = new Uint8ClampedArray(w * h * 4);
-                for (let i = 0; i < w * h; i++) {
-                    let val = 0;
-                    if (nms[i] >= tHigh) {
-                        val = 255; // Strong edge
-                    } else if (nms[i] >= tLow) {
-                        // Weak edge: check if any 8-neighbor is strong
-                        let y = Math.floor(i / w), x = i % w;
-                        outer: for (let ky = -1; ky <= 1; ky++) {
-                            for (let kx = -1; kx <= 1; kx++) {
-                                let ny = y+ky, nx = x+kx;
-                                if (ny>=0&&ny<h&&nx>=0&&nx<w && nms[ny*w+nx] >= tHigh) {
-                                    val = 255; break outer;
-                                }
-                            }
-                        }
-                    }
-                    out[i*4]   = val;
-                    out[i*4+1] = val;
-                    out[i*4+2] = val;
-                    out[i*4+3] = 255;
-                }
-
-                offCtx.putImageData(new ImageData(out, w, h), 0, 0);
-                return offCanvas.toDataURL();
-            }
         });
     </script>
 </body>
