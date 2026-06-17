@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
             installCmd: "pip install pillow numpy",
             isPython: true
         },
-        suavizado: {
-            title: "b) Filtro de Suavizado",
-            file: "b-filtroSuavizado/filtro-suavizado.py",
-            runCmd: "python filtro-suavizado.py",
+        bordes: {
+            title: "b) Filtro de Detección de Bordes (Sobel 3x3)",
+            file: "b-filtroSuavizado/filtro-bordes.py",
+            runCmd: "python filtro-bordes.py",
             demoType: "iframe",
             demoUrl: "b-filtroSuavizado/index.html",
-            installCmd: "pip install pillow numpy",
+            installCmd: "pip install pillow numpy opencv-python",
             isPython: true
         },
         vacalola: {
@@ -68,8 +68,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadProject(projectId) {
         const data = projectData[projectId];
+        if (!data) return;
         projectTitle.innerText = data.title;
         currentProject = projectId;
+
+        // Activar el elemento correspondiente en el menú lateral
+        navItems.forEach(item => {
+            if (item.dataset.project === projectId) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
 
         // Show/hide tabs according to project type
         const tabBtnCode = document.getElementById('tab-btn-code');
@@ -179,6 +189,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Load initial project
-    loadProject('texturas');
+    // Cargar proyecto inicial desde parámetros URL o hash
+    const urlParams = new URLSearchParams(window.location.search);
+    let initialProject = urlParams.get('project') || window.location.hash.substring(1) || 'texturas';
+    if (initialProject === 'suavizado') {
+        initialProject = 'bordes';
+    }
+    loadProject(projectData[initialProject] ? initialProject : 'texturas');
 });
