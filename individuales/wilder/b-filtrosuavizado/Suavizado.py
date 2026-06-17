@@ -3,20 +3,33 @@ from tkinter import filedialog, messagebox
 from PIL import Image, ImageTk
 import numpy as np
 
-class FiltroSuavizadoApp:
+class FiltroBordesApp:
     def __init__(self, root):
         # --- CONFIGURACIÓN PRINCIPAL DE LA VENTANA ---
         self.root = root
-        self.root.title("Filtro de Suavizado (Promedio 3x3) - Procesamiento a nivel de píxel")
+        self.root.title("Detección de Bordes - Operador Sobel")
         self.root.geometry("1200x750") 
         
         self.ruta_imagen = None
         self.img_original = None
         self.img_procesada = None
         
-        # Forzamos un tamaño fijo de 500x500 para evitar que imágenes gigantes rompan la interfaz
+        # Tamaño fijo para las imágenes
         self.ancho_img = 500
         self.alto_img = 500
+
+        # --- KERNELS DE SOBEL (como se vio en clase) ---
+        self.kernel_sobel_x = np.array([
+            [-1, 0, 1],
+            [-2, 0, 2],
+            [-1, 0, 1]
+        ])
+        
+        self.kernel_sobel_y = np.array([
+            [-1, -2, -1],
+            [0, 0, 0],
+            [1, 2, 1]
+        ])
 
         # --- INTERFAZ DE USUARIO: PANEL DE BOTONES ---
         frame_botones = tk.Frame(self.root)
@@ -25,7 +38,7 @@ class FiltroSuavizadoApp:
         btn_cargar = tk.Button(frame_botones, text="1. Cargar Imagen", command=self.cargar_imagen)
         btn_cargar.grid(row=0, column=0, padx=10)
 
-        btn_procesar = tk.Button(frame_botones, text="2. Aplicar Filtro 3x3", command=self.procesar_imagen)
+        btn_procesar = tk.Button(frame_botones, text="2. Detectar Bordes", command=self.procesar_imagen)
         btn_procesar.grid(row=0, column=1, padx=10)
 
         btn_guardar = tk.Button(frame_botones, text="3. Guardar Resultado", command=self.guardar_imagen)
@@ -35,27 +48,34 @@ class FiltroSuavizadoApp:
         frame_imagenes = tk.Frame(self.root)
         frame_imagenes.pack(pady=10)
 
-        # "Píxel invisible" para mantener fijos los cuadros grises desde el inicio
+        # Píxel invisible
         self.pixel_vacio = tk.PhotoImage(width=self.ancho_img, height=self.alto_img)
 
         # Etiqueta Izquierda: Imagen Original
-        self.lbl_antes = tk.Label(frame_imagenes, text="[Imagen Original]", bg="#404040", fg="white",
-                                  image=self.pixel_vacio, compound="center", width=self.ancho_img, height=self.alto_img)
-        self.lbl_antes.grid(row=0, column=0, padx=20)
+        self.lbl_original = tk.Label(frame_imagenes, text="[Imagen Original]", bg="#404040", fg="white",
+                                     image=self.pixel_vacio, compound="center", width=self.ancho_img, height=self.alto_img)
+        self.lbl_original.grid(row=0, column=0, padx=20)
 
-        # Etiqueta Derecha: Imagen Procesada (Suavizada)
-        self.lbl_despues = tk.Label(frame_imagenes, text="[Resultado Suavizado]", bg="#404040", fg="white",
-                                    image=self.pixel_vacio, compound="center", width=self.ancho_img, height=self.alto_img)
-        self.lbl_despues.grid(row=0, column=1, padx=20)
+        # Etiqueta Derecha: Resultado final (bordes detectados)
+        self.lbl_resultado = tk.Label(frame_imagenes, text="[Bordes Detectados]", bg="#404040", fg="white",
+                                      image=self.pixel_vacio, compound="center", width=self.ancho_img, height=self.alto_img)
+        self.lbl_resultado.grid(row=0, column=1, padx=20)
 
         # --- INTERFAZ DE USUARIO: INFORMACIÓN DEL FILTRO ---
         frame_info = tk.Frame(self.root)
         frame_info.pack(pady=20)
         
         info_texto = (
-            "¿Cómo funciona este filtro de suavizado?\n"
-            "El algoritmo recorre la imagen tomando ventanas de 3x3 píxeles.\n"
-            "Calcula el color promedio de esos 9 píxeles y se lo asigna al píxel central, reduciendo así el ruido visual."
+            "¿Cómo funciona el operador Sobel para detección de bordes?\n"
+            "El algoritmo calcula el gradiente de intensidad en direcciones X (horizontal) e Y (vertical).\n"
+            "Los bordes se detectan donde hay cambios bruscos en la intensidad de los píxeles.\n\n"
+            "Kernels de Sobel utilizados (como se vio en clase):\n"
+            "Gx (Horizontal):     Gy (Vertical):\n"
+            "┌─────────┐          ┌─────────┐\n"
+            "│-1  0  1 │          │-1 -2 -1 │\n"
+            "│-2  0  2 │          │ 0  0  0 │\n"
+            "│-1  0  1 │          │ 1  2  1 │\n"
+            "└─────────┘          └─────────┘"
         )
         tk.Label(frame_info, text=info_texto, font=("Arial", 11), justify="center").pack()
 
@@ -70,73 +90,80 @@ class FiltroSuavizadoApp:
         self.img_original = img.resize((self.ancho_img, self.alto_img), Image.Resampling.LANCZOS)
         
         img_tk = ImageTk.PhotoImage(self.img_original)
-        self.lbl_antes.config(image=img_tk, compound="none")
-        self.lbl_antes.image = img_tk
+        self.lbl_original.config(image=img_tk, compound="none")
+        self.lbl_original.image = img_tk
         
-        self.lbl_despues.config(image=self.pixel_vacio, text="[Esperando procesamiento...]", compound="center")
+        # Resetear la etiqueta de resultado
+        self.lbl_resultado.config(image=self.pixel_vacio, text="[Bordes Detectados]", compound="center")
+        self.img_procesada = None
 
     def procesar_imagen(self):
         if not self.img_original:
             messagebox.showwarning("Advertencia", "Primero debes cargar una imagen.")
             return
         
-        self.lbl_despues.config(text="Aplicando filtro de promedio...\nEsto tomará unos segundos.")
+        self.lbl_resultado.config(text="Detectando bordes...\nEsto tomará unos segundos.")
         self.root.update()
 
-        # --- INICIO DEL ALGORITMO A NIVEL DE PÍXEL (FILTRO DE PROMEDIO 3x3) ---
+        # --- INICIO DEL ALGORITMO DE DETECCIÓN DE BORDES (SOBEL) ---
         
-        # 1. Convertimos la imagen a matriz. 
-        # Usamos 'float32' temporalmente porque al sumar 9 píxeles de valor 255 podríamos 
-        # superar el límite de 255 de los enteros de 8 bits (uint8) y generar errores de color.
-        img_array = np.array(self.img_original, dtype=np.float32)
-        alto, ancho, canales = img_array.shape
+        # 1. Convertir la imagen a escala de grises
+        img_gris = self.img_original.convert("L")
+        img_array = np.array(img_gris, dtype=np.float32)
+        alto, ancho = img_array.shape
         
-        # 2. Creamos un lienzo para el resultado copiando la imagen original.
-        # Esto sirve para que los píxeles de los bordes externos (que no podemos procesar 
-        # porque no tienen vecinos de un lado) no queden de color negro.
-        resultado = np.copy(img_array)
+        # 2. Crear matrices para los gradientes
+        grad_x = np.zeros((alto, ancho), dtype=np.float32)
+        grad_y = np.zeros((alto, ancho), dtype=np.float32)
+        grad_magnitud = np.zeros((alto, ancho), dtype=np.float32)
 
-        # 3. Definimos el radio de la ventana. Offset 1 = ventana de 3x3.
-        offset = 3 
-        
-        # 4. Recorremos píxel por píxel ignorando el borde externo
-        for y in range(offset, alto - offset):
-            for x in range(offset, ancho - offset):
+        # 3. Aplicar convolución con los kernels de Sobel
+        for y in range(1, alto - 1):
+            for x in range(1, ancho - 1):
+                # Extraemos la ventana de 3x3
+                ventana = img_array[y-1:y+2, x-1:x+2]
                 
-                # Extraemos la sub-matriz de 3x3 píxeles (los 9 vecinos)
-                ventana = img_array[y-offset : y+offset+1, x-offset : x+offset+1]
+                # Aplicamos el kernel Sobel X (bordes horizontales)
+                grad_x[y, x] = np.sum(ventana * self.kernel_sobel_x)
                 
-                # Calculamos el PROMEDIO de los colores en esa ventana de 3x3.
-                # axis=(0,1) significa que promediamos los valores de alto y ancho,
-                # manteniendo separados los canales Rojo, Verde y Azul.
-                promedio_RGB = np.mean(ventana, axis=(0, 1))
+                # Aplicamos el kernel Sobel Y (bordes verticales)
+                grad_y[y, x] = np.sum(ventana * self.kernel_sobel_y)
                 
-                # Asignamos el nuevo valor suavizado al píxel central
-                resultado[y, x] = promedio_RGB
+                # Calculamos la magnitud del gradiente
+                grad_magnitud[y, x] = abs(grad_x[y, x]) + abs(grad_y[y, x])
 
-        # 5. Aseguramos que los valores no se salgan del rango 0-255 y volvemos a formato de imagen (uint8)
-        resultado = np.clip(resultado, 0, 255).astype(np.uint8)
+        # 4. Normalizar los resultados para visualización
+        def normalizar(matriz):
+            matriz = np.clip(matriz, 0, 255)
+            return matriz.astype(np.uint8)
         
-        # --- FIN DEL ALGORITMO ---
-
-        self.img_procesada = Image.fromarray(resultado)
-        img_res_tk = ImageTk.PhotoImage(self.img_procesada)
+        grad_magnitud_norm = normalizar(grad_magnitud)
         
-        self.lbl_despues.config(image=img_res_tk, compound="none")
-        self.lbl_despues.image = img_res_tk
-        messagebox.showinfo("Éxito", "El filtro de suavizado se ha aplicado correctamente.")
+        # 5. Convertir a imagen PIL
+        img_resultado = Image.fromarray(grad_magnitud_norm, mode='L')
+        
+        # 6. Mostrar resultado en la interfaz
+        img_tk_result = ImageTk.PhotoImage(img_resultado)
+        self.lbl_resultado.config(image=img_tk_result, compound="none")
+        self.lbl_resultado.image = img_tk_result
+        
+        # Guardamos la imagen procesada
+        self.img_procesada = img_resultado
+        
+        messagebox.showinfo("Éxito", "La detección de bordes se ha completado correctamente.")
 
     def guardar_imagen(self):
         if not self.img_procesada:
             messagebox.showwarning("Advertencia", "No hay ninguna imagen procesada para guardar.")
             return
             
-        ruta_guardado = filedialog.asksaveasfilename(defaultextension=".jpg", filetypes=[("JPEG", "*.jpg"), ("PNG", "*.png")])
+        ruta_guardado = filedialog.asksaveasfilename(defaultextension=".jpg", 
+                                                    filetypes=[("JPEG", "*.jpg"), ("PNG", "*.png")])
         if ruta_guardado:
             self.img_procesada.save(ruta_guardado)
             messagebox.showinfo("Guardado", f"Imagen guardada correctamente en:\n{ruta_guardado}")
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = FiltroSuavizadoApp(root)
+    app = FiltroBordesApp(root)
     root.mainloop()
