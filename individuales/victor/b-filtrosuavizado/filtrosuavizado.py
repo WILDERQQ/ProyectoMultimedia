@@ -7,7 +7,7 @@ from PIL import Image, ImageTk
 class AppFiltroGaussiano:
     def __init__(self, root):
         self.root = root
-        self.root.title("Filtro de Suavizado y Detección de Bordes")
+        self.root.title("Filtro de Suavizado y Detección de Bordes (Matricial)")
         self.root.geometry("950x610")
         self.root.configure(bg="#f5f5f5")
 
@@ -23,8 +23,8 @@ class AppFiltroGaussiano:
         ttk.Separator(frame_controles, orient="vertical").pack(side="left", fill="y", padx=15)
 
         tk.Label(frame_controles, text="Operación:", bg="#f5f5f5").pack(side="left", padx=5)
-        self.combo_operacion = ttk.Combobox(frame_controles, values=["Solo Suavizado (Gaussiano 3x3)", "Suavizado + Detección de Bordes (Canny)"], state="readonly", width=35)
-        self.combo_operacion.current(1) # Por defecto: Bordes
+        self.combo_operacion = ttk.Combobox(frame_controles, values=["Solo Suavizado (Gaussiano 3x3)", "Suavizado + Detección de Bordes (Sobel 3x3)"], state="readonly", width=38)
+        self.combo_operacion.current(1) 
         self.combo_operacion.pack(side="left", padx=5)
 
         self.btn_filtrar = tk.Button(frame_controles, text="✨ Aplicar Algoritmo", font=("Arial", 9, "bold"), bg="#009688", fg="white", command=self.aplicar_filtro, relief="flat", padx=15, pady=5)
@@ -52,22 +52,72 @@ class AppFiltroGaussiano:
             self.mostrar_imagen(self.imagen_original, self.lbl_antes)
             self.lbl_despues.config(image='', text="Esperando procesamiento...")
 
+    # --- NUEVOS MÉTODOS DE CONVOLUCIÓN MATRICIAL EXPLÍCITA ---
+    def _convolucion_3x3(self, img, kernel):
+        """ Aplica un kernel de 3x3 de forma explícita y vectorizada sobre canales 2D """
+        h, w = img.shape[:2]
+        resultado = np.zeros((h, w), dtype=np.float32)
+        
+        # Desplazamientos matriciales para evitar bucles for píxel por píxel
+        for i in range(3):
+            for j in range(3):
+                valor_kernel = kernel[i, j]
+                if valor_kernel != 0:
+                    resultado[1:h-1, 1:w-1] += img[i:h-2+i, j:w-2+j] * valor_kernel
+                    
+        return resultado
+
+    def aplicar_gaussiano_manual(self, img_bgr):
+        """ Matriz Gaussiana explícita 3x3 distribuida en los 3 canales BGR """
+        kernel_gauss = np.array([[1, 2, 1],
+                                 [2, 4, 2],
+                                 [1, 2, 1]], dtype=np.float32) / 16.0
+        
+        canales = cv2.split(img_bgr)
+        canales_procesados = []
+        
+        for canal in canales:
+            res_canal = self._convolucion_3x3(canal.astype(np.float32), kernel_gauss)
+            canales_procesados.append(np.clip(res_canal, 0, 255).astype(np.uint8))
+            
+        return cv2.merge(canales_procesados)
+
+    def aplicar_sobel_manual(self, img_bgr):
+        """ Filtro de bordes Sobel utilizando matrices de gradiente Gx y Gy """
+        # Convierte a escala de grises manualmente usando la fórmula de luminancia estándar
+        img_gris = 0.299 * img_bgr[:,:,2] + 0.587 * img_bgr[:,:,1] + 0.114 * img_bgr[:,:,0]
+        
+        # Matrices Sobel explícitas
+        kernel_x = np.array([[-1, 0, 1],
+                             [-2, 0, 2],
+                             [-1, 0, 1]], dtype=np.float32)
+        
+        kernel_y = np.array([[-1, -2, -1],
+                             [ 0,  0,  0],
+                             [ 1,  2,  1]], dtype=np.float32)
+        
+        gx = self._convolucion_3x3(img_gris, kernel_x)
+        gy = self._convolucion_3x3(img_gris, kernel_y)
+        
+        # Magnitud del gradiente de forma explícita: sqrt(Gx^2 + Gy^2)
+        magnitud = np.sqrt(gx**2 + gy**2)
+        magnitud = np.clip(magnitud, 0, 255).astype(np.uint8)
+        
+        # Reconvertir a 3 canales para mostrar en la interfaz
+        return cv2.merge([magnitud, magnitud, magnitud])
+
     def aplicar_filtro(self):
         if self.imagen_original is None: return
 
         seleccion = self.combo_operacion.get()
 
-        # PASO 1: Suavizado obligatorio en ambos casos (Ventana 3x3)
-        imagen_suavizada = cv2.GaussianBlur(self.imagen_original, (3, 3), 0)
+        # PASO 1: Suavizado Gaussiano Matricial
+        imagen_suavizada = self.aplicar_gaussiano_manual(self.imagen_original)
 
+        # PASO 2: Selección de Algoritmo
         if "Bordes" in seleccion:
-           
-            bordes_grises = cv2.Canny(imagen_suavizada, 50, 150)
-            
-        
-            resultado_final = cv2.cvtColor(bordes_grises, cv2.COLOR_GRAY2BGR)
+            resultado_final = self.aplicar_sobel_manual(imagen_suavizada)
         else:
-            
             resultado_final = imagen_suavizada
 
         self.mostrar_imagen(resultado_final, self.lbl_despues)
